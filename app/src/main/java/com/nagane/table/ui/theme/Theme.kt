@@ -52,7 +52,13 @@ fun NaganeTableTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        // typography = Typography,
         content = content
     )
+}
+
+object NaganeTheme {
+    val typography: NaganeCustomTypography
+        @Composable
+        get() = LocalNaganeTypography.current
 }

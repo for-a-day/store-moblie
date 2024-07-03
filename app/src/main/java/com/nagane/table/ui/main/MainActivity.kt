@@ -1,7 +1,6 @@
 package com.nagane.table.ui.main
 
 import android.os.Bundle
-import android.window.SplashScreen
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,8 +18,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.nagane.table.ui.screen.CustomSplashScreen
-import com.nagane.table.ui.screen.MainScreen
 import com.nagane.table.ui.screen.home.homeRoute
 import com.nagane.table.ui.screen.login.LoginScreen
 import com.nagane.table.ui.theme.NaganeTableTheme
@@ -55,24 +52,6 @@ fun NaganeApp() {
             navController = navController,
             modifier = Modifier.padding(innerPadding))
     }
-    NavHost(navController = navController, startDestination = "splash") {
-        composable("splash") { CustomSplashScreen(navController) }
-        composable("main") { MainScreen() }
-        composable("login") { LoginScreen(navController) }
-    }
 }
 
-@Composable
-fun NaganeNavigationGraph(
-    navController: NavHostController,
-    modifier: Modifier?,
-) {
-    NavHost(
-        navController = navController,
-        startDestination = "splash"
-    ) {
-        composable("splash") { CustomSplashScreen(navController) }
-        homeRoute(navController)
-    }
-}
 

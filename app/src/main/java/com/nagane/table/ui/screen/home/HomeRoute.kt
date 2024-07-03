@@ -12,7 +12,7 @@ fun NavGraphBuilder.homeRoute(navController: NavController) {
         route = Screens.Home.route + "_route"
     ) {
         composable(Screens.Home.route) {
-
+            HomeScreen(navController)
         }
     }
 }
