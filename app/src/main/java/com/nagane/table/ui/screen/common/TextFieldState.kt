@@ -1,3 +1,4 @@
+/*
 package com.nagane.table.ui.screen.common
 
 import androidx.compose.runtime.getValue
@@ -5,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.setValue
 
-/** textField 상태 확인 코드 => jetsurvey 참고 */
+*/
+/** textField 상태 확인 코드 => jetsurvey 참고 *//*
+
 open class TextFieldState(
     private val validator: (String) -> Boolean = { true },
     private val errorFor : (String) -> String = { "" }
@@ -61,4 +64,4 @@ fun textFieldStateSaver(
             isFocusedDirty = it[1] as Boolean
         }
     }
-)
+)*/

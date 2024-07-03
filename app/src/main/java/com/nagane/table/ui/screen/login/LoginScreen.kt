@@ -1,36 +1,49 @@
 package com.nagane.table.ui.screen.login
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
 import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.checkIfLoggedIn
-import com.nagane.table.ui.screen.common.TextFieldState
+import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
+import com.nagane.table.ui.theme.nagane_theme_light_0
+import com.nagane.table.ui.theme.nagane_theme_light_8
+import com.nagane.table.ui.theme.nagane_theme_main
 
 suspend fun checkIfLoggedIn(): Boolean {
     // delay(1000)
@@ -62,25 +75,20 @@ fun LoginScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                LoginTableOrder(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                )
-                Button(onClick = {
+            LoginTableOrder(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp),
+                onClick = {
                     navController.navigate(Screens.Home.route) {
                         popUpTo(Screens.Login.route) { inclusive = true }
                     }
-                }) {
-                    Text("Login")
                 }
-            }
+            )
+
         }
 
     }
@@ -88,96 +96,142 @@ fun LoginScreen(navController: NavHostController) {
 
 @Composable
 fun LoginTableOrder(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
-    val tableCodeState by rememberSaveable(stateSaver = TableCodeStateSaver) {
-        mutableStateOf(TableCodeState())
-    }
 
-    val storeCodeState by rememberSaveable(stateSaver = TableCodeStateSaver) {
-        mutableStateOf(TableCodeState())
-    }
+    val tableCode = remember { mutableStateOf(TextFieldValue("")) }
+    val storeCode = remember { mutableStateOf(TextFieldValue("")) }
+    val tableNumber = remember { mutableStateOf(TextFieldValue("")) }
+    val tableName = remember { mutableStateOf(TextFieldValue("")) }
+    val coroutineScope = rememberCoroutineScope()
+
     val focusRequester = remember { FocusRequester() }
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(id = R.string.login_title),
             style = NaganeTypography.h1,
             modifier = Modifier.padding(top = 64.dp, bottom = 12.dp)
         )
-        val onSubmit = {
-            if (tableCodeState.isValid) {
-                // TODO 가능할 시 API 요청 보내기...
-            } else {
-                tableCodeState.enableShowErrors()
-            }
-        }
-        TableCode(
-            tableCodeState = tableCodeState,
-            onImeAction = { focusRequester.requestFocus() }
+
+        // 테이블 코드
+        CustomOutlinedTextField(
+            value = tableCode.value,
+            onValueChange = {
+                tableCode.value = it
+            },
+            label = stringResource(id = R.string.table_code),
         )
+
+        // 가맹점 코드
+        CustomOutlinedTextField(
+            value = storeCode.value,
+            onValueChange = {
+                storeCode.value = it
+            },
+            label = stringResource(id = R.string.store_code),
+        )
+
+        // 테이블 번호(숫자만 가능)
+        CustomOutlinedTextField(
+            value = tableNumber.value,
+            onValueChange = {
+                if (it.text.all { char -> char.isDigit() }) {
+                    tableNumber.value = it
+                }
+            },
+            label = stringResource(id = R.string.table_number),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number
+            )
+        )
+
+        // 테이블 이름
+        CustomOutlinedTextField(
+            value = tableName.value,
+            onValueChange = {
+                tableName.value = it
+            },
+            label = stringResource(id = R.string.table_name),
+        )
+
+        Button(
+            onClick = onClick,
+            modifier = Modifier
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = nagane_theme_main,
+                contentColor = nagane_theme_light_0,
+                disabledContainerColor = nagane_theme_light_8,
+                disabledContentColor = nagane_theme_light_0
+            )
+        ) {
+            Text(
+                text = stringResource(id = R.string.table_login_btn),
+                style = NaganeTypography.h5
+            )
+        }
     }
 }
 
 @Composable
-fun TableCode(
-    tableCodeState: TextFieldState = remember{ TableCodeState() },
-    imeAction: ImeAction = ImeAction.Next,
+fun CustomOutlinedTextField(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    label: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    // imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit = {}
 ) {
     OutlinedTextField(
-        value = tableCodeState.text,
-        onValueChange = {
-            tableCodeState.text = it
-        },
+        value = value,
+        onValueChange = onValueChange,
         label = {
             Text(
-                text = stringResource(id = R.string.table_code),
-                style = NaganeTypography.h3
+                text = label,
+                style = NaganeTypography.p
             )
         },
-        modifier = Modifier
-            .onFocusChanged { focusState ->
-                tableCodeState.onFocusChange(focusState.isFocused)
-                if (!focusState.isFocused) {
-                    tableCodeState.enableShowErrors()
-                }
-            },
+//        modifier = Modifier
+//            .onFocusChanged { focusState ->
+//
+//            },
         textStyle = NaganeTypography.p,
-        isError = tableCodeState.showErrors(),
+        keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                onImeAction()
+            }
+        ),
         singleLine = true
     )
 }
 
+
+
 @Composable
-fun StoreCode(
-    storeCodeState: TextFieldState = remember{ TextFieldState() },
-    imeAction: ImeAction = ImeAction.Next,
-    onImeAction: () -> Unit = {}
-) {
-    OutlinedTextField(
-        value = storeCodeState.text,
-        onValueChange = {
-            storeCodeState.text = it
-        },
-        label = {
-            Text(
-                text = stringResource(id = R.string.table_code),
-                style = NaganeTypography.h3
-            )
-        },
-        modifier = Modifier
-            .onFocusChanged { focusState ->
-                storeCodeState.onFocusChange(focusState.isFocused)
-                if (!focusState.isFocused) {
-                    storeCodeState.enableShowErrors()
-                }
-            },
-        textStyle = NaganeTypography.p,
-        isError = storeCodeState.showErrors(),
-        singleLine = true
-    )
+fun TextFieldError(textError: String) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = textError,
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.error
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoginScreenPreview() {
+    NaganeTableTheme {
+        Surface {
+            LoginScreen(navController = rememberNavController())
+        }
+    }
 }
