@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
 }
 
 android {
@@ -54,13 +55,35 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     /**  버전 지정 */
     val roomVersion = "2.6.1"
+    val retrofitVersion = "2.9.0"
 
     /** Room */
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation("androidx.room:room-paging:$roomVersion")
+
+    /** material icon */
     implementation(libs.androidx.material.icons.extended)
+
+    /** api(retrofit) */
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.converter.scalars)
+
+    /** gson */
+    implementation(libs.gson)
+
+    /** okhttp3 */
+    implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.okhttp)
+    implementation(libs.adapter.rxjava2)
+    implementation(libs.rxjava)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

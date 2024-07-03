@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 // 테이블 오더 엔티티
-@Entity(tableName = "Table")
+@Entity(tableName = "StoreTable")
 data class StoreTableEntity (
     // 테이블 코드(pk)
     @ColumnInfo(name = "tableCode")
