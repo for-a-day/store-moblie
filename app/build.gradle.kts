@@ -51,6 +51,14 @@ android {
 }
 
 dependencies {
+    /**  버전 지정 */
+    val roomVersion = "2.6.1"
+
+    /** Room */
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation("androidx.room:room-paging:$roomVersion")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
