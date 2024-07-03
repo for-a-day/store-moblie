@@ -1,7 +1,7 @@
 package com.nagane.table.ui.main
 
 sealed class Screens(val route: String) {
-
+    object splash : Screens("splash")
     object Login : Screens("login")
 
     object Home : Screens("home")
