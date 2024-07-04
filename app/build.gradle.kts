@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-
+    id("org.jetbrains.kotlin.kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -19,6 +20,14 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas".toString()
+            }
+        }
+
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -47,20 +56,25 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/gradle/incremental.annotation.processors"
         }
     }
+
 }
 
 dependencies {
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.adapters)
     /**  버전 지정 */
     val roomVersion = "2.6.1"
     val retrofitVersion = "2.9.0"
+    val hiltVersion = "2.44"
 
     /** Room */
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
 
     /** material icon */
@@ -70,6 +84,12 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
+
+    /** hilt */
+    implementation(libs.hilt.android)
+    annotationProcessor(libs.dagger.compiler)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     /** gson */
     implementation(libs.gson)
@@ -100,4 +120,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

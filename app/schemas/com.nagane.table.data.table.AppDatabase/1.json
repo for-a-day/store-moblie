@@ -1,0 +1,52 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "64975882bf9589f59a93c0f8d4a1fd5a",
+    "entities": [
+      {
+        "tableName": "StoreTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`tableCode` TEXT NOT NULL, `storeCode` TEXT NOT NULL, `tableNumber` INTEGER NOT NULL, `tableName` TEXT NOT NULL, PRIMARY KEY(`tableCode`))",
+        "fields": [
+          {
+            "fieldPath": "tableCode",
+            "columnName": "tableCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeCode",
+            "columnName": "storeCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tableNumber",
+            "columnName": "tableNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tableName",
+            "columnName": "tableName",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "tableCode"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '64975882bf9589f59a93c0f8d4a1fd5a')"
+    ]
+  }
+}

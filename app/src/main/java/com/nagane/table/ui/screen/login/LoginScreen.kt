@@ -1,5 +1,6 @@
 package com.nagane.table.ui.screen.login
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,61 +23,75 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
-import com.nagane.table.data.api.loginTableApi
-import com.nagane.table.data.entity.StoreTableEntity
-import com.nagane.table.data.table.AppDatabase
+import com.nagane.table.data.api.ApiResponse
 import com.nagane.table.ui.main.Screens
-import com.nagane.table.ui.screen.checkIfLoggedIn
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_8
 import com.nagane.table.ui.theme.nagane_theme_main
-import kotlinx.coroutines.launch
 
-suspend fun checkIfLoggedIn(): Boolean {
-    // delay(1000)
-    return false
-}
 @Composable
-fun LoginScreen(navController: NavHostController) {
-    var isLoggedIn by remember { mutableStateOf<Boolean?>(null) }
+fun LoginScreen(navController: NavHostController,
+                loginViewModel: LoginViewModel = hiltViewModel()) {
+    val isLoggedIn by loginViewModel.isLoggedIn.collectAsState()
+    val loginResult by loginViewModel.loginResult.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        isLoggedIn = checkIfLoggedIn()
-    }
+//    LaunchedEffect(Unit) {
+//        loginViewModel.checkIfLoggedIn()
+//    }
 
     LaunchedEffect(isLoggedIn) {
         when (isLoggedIn) {
             true -> navController.navigate(Screens.Home.route) {
                 popUpTo(Screens.Login.route) { inclusive = true }
             }
-            false -> {}
-            null -> {}
+            false, null -> {}
+        }
+    }
+
+    LaunchedEffect(loginResult) {
+        loginResult?.let { response ->
+            if (response is ApiResponse.Success && response.statusCode == 200) {
+                navController.navigate(Screens.Home.route) {
+                    popUpTo(Screens.Login.route) { inclusive = true }
+                }
+            } else {
+                val errorMessage = when (response) {
+                    is ApiResponse.Failure.ClientError -> response.message
+                    is ApiResponse.Failure.ServerError -> response.message
+                    is ApiResponse.Failure.Exception -> response.message ?: "An unexpected error occurred"
+                    else -> "Failed to communicate with server"
+                }
+
+                showToast(
+                    context,
+                    errorMessage)
+            }
         }
     }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
@@ -89,30 +104,22 @@ fun LoginScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp),
-                navController = navController
+                loginViewModel = loginViewModel
             )
-
         }
-
     }
 }
 
 @Composable
 fun LoginTableOrder(
-    navController: NavHostController,
+    loginViewModel: LoginViewModel,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
 ) {
-
     val tableCode = remember { mutableStateOf(TextFieldValue("")) }
     val storeCode = remember { mutableStateOf(TextFieldValue("")) }
     val tableNumber = remember { mutableStateOf(TextFieldValue("")) }
     val tableName = remember { mutableStateOf(TextFieldValue("")) }
-    val coroutineScope = rememberCoroutineScope()
-
-    val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
-
     val allFieldsFilled = tableCode.value.text.isNotEmpty() &&
             storeCode.value.text.isNotEmpty() &&
             tableNumber.value.text.isNotEmpty() &&
@@ -132,18 +139,14 @@ fun LoginTableOrder(
         // 테이블 코드
         CustomOutlinedTextField(
             value = tableCode.value,
-            onValueChange = {
-                tableCode.value = it
-            },
+            onValueChange = { tableCode.value = it },
             label = stringResource(id = R.string.table_code),
         )
 
         // 가맹점 코드
         CustomOutlinedTextField(
             value = storeCode.value,
-            onValueChange = {
-                storeCode.value = it
-            },
+            onValueChange = { storeCode.value = it },
             label = stringResource(id = R.string.store_code),
         )
 
@@ -164,55 +167,27 @@ fun LoginTableOrder(
         // 테이블 이름
         CustomOutlinedTextField(
             value = tableName.value,
-            onValueChange = {
-                tableName.value = it
-            },
+            onValueChange = { tableName.value = it },
             label = stringResource(id = R.string.table_name),
         )
 
         Button(
-
             onClick = {
-                coroutineScope.launch {
-                    loginTableApi(
+                if (allFieldsFilled) {
+                    loginViewModel.login(
                         tableCode.value.text,
                         storeCode.value.text,
                         tableNumber.value.text.toIntOrNull() ?: 0,
                         tableName.value.text
-                    ) { response ->
-                        if (response != null && response.statusCode == 200) {
-                            // 데이터베이스 인스턴스 가져오기
-                            val db = AppDatabase.getDatabase(context)
-                            val storeTableDao = db.storeTableDao()
-
-                            // 데이터베이스에 저장
-                            val storeTable = StoreTableEntity(
-                                tableCode = tableCode.value.text,
-                                storeCode = storeCode.value.text,
-                                tableNumber = tableNumber.value.text.toIntOrNull() ?: 0,
-                                tableName = tableName.value.text
-                            )
-
-                            // 데이터 삽입
-                            coroutineScope.launch {
-                                storeTableDao.insert(storeTable)
-                            }
-
-                            navController.navigate(Screens.Home.route) {
-                                popUpTo(Screens.Login.route) { inclusive = true }
-                            }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                response?.message ?: "Failed to communicate with server",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+                    )
+                } else {
+                    showToast(
+                        context,
+                        "모든 값을 채워주세요"
+                    )
                 }
             },
-            modifier = Modifier
-                .padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = nagane_theme_main,
                 contentColor = nagane_theme_light_0,
@@ -226,6 +201,11 @@ fun LoginTableOrder(
             )
         }
     }
+}
+
+fun showToast(context: Context,
+              message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 @Composable

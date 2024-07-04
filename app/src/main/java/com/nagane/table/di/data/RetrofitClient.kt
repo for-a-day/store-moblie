@@ -1,5 +1,6 @@
-package com.nagane.table.data.api
+package com.nagane.table.di.data
 
+import com.nagane.table.data.api.NaganeAPI
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
