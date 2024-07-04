@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,10 +65,10 @@ fun MoveAdminButton(
 
     Image(
         modifier = Modifier
-            .size(120.dp)
+            .width(120.dp)
             .padding(horizontal = 16.dp)
             .clickable { onButtonClick() },
         painter = painterResource(id = R.drawable.nagane_dark_m),
-        contentDescription = "Logo of Nagane" // 이 부분에 이미지에 대한 설명을 적습니다.
+        contentDescription = "Logo of Nagane"
     )
 }

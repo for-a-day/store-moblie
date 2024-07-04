@@ -1,0 +1,77 @@
+package com.nagane.table.ui.screen.home
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nagane.table.data.model.Category
+import com.nagane.table.ui.theme.NaganeTypography
+import com.nagane.table.ui.theme.nagane_theme_light_0
+import com.nagane.table.ui.theme.nagane_theme_light_8
+import com.nagane.table.ui.theme.nagane_theme_main
+import com.nagane.table.ui.theme.nagane_theme_sub
+
+@Composable
+fun CategoryRow(
+    homeViewModel: HomeViewModel = viewModel()
+) {
+    val categories by homeViewModel.categories
+    var nowSelected by remember { mutableIntStateOf(0) }
+
+    LazyRow(
+        modifier = Modifier.padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(categories) { category ->
+            CategoryButton(
+                category,
+                nowSelected = nowSelected,
+                onClick = { categoryNo ->
+                    nowSelected = categoryNo
+                }
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun CategoryButton(
+    category: Category = Category(0, "전체보기"),
+    nowSelected: Int = 0,
+    onClick: (Int) -> Unit = {},
+) {
+    Button(
+        onClick = {
+            category.categoryNo?.let { onClick(it) }
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (nowSelected == category.categoryNo) nagane_theme_main else Color.Transparent,
+            contentColor = nagane_theme_light_0,
+            disabledContainerColor = nagane_theme_light_8,
+            disabledContentColor = nagane_theme_light_0
+        ),
+        border = BorderStroke(2.dp, nagane_theme_main),
+    ) {
+        Text(
+            text = category.categoryName,
+            style = NaganeTypography.b,
+            color = if (nowSelected == category.categoryNo) nagane_theme_sub else nagane_theme_main
+        )
+    }
+}

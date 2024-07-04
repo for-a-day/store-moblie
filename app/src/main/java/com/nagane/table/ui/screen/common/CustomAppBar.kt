@@ -53,17 +53,17 @@ fun CustomAppBarUI(
             .fillMaxWidth()
             .background(backgroundColor)
     ) {
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             leftButton()
             Text(text = title,
-                style = NaganeTypography.h4,
+                style = NaganeTypography.h3,
                 color = subColor)
             rightButton()
         }

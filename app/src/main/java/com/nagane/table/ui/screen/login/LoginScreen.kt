@@ -69,7 +69,7 @@ fun LoginScreen(navController: NavController) {
         val dao = AppDatabase.getDatabase(context).storeTableDao()
         val count = dao.getCount()
         // return count > 0
-        return false
+        return true
     }
 
 

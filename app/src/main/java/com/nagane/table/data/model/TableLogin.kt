@@ -1,6 +1,6 @@
-package com.nagane.table.data.api
+package com.nagane.table.data.model
 
-data class TableLoginRequestBody(
+data class TableLogin(
     val tableCode: String,
     val storeCode: String,
     val tableNumber: Int,
