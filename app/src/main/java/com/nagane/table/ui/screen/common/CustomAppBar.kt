@@ -1,6 +1,7 @@
 package com.nagane.table.ui.screen.common
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,7 +64,7 @@ fun CustomAppBarUI(
         ) {
             leftButton()
             Text(text = title,
-                style = NaganeTypography.h3,
+                style = NaganeTypography.h2,
                 color = subColor)
             rightButton()
         }
@@ -75,17 +76,14 @@ fun BackButton(
     onClick: () -> Unit,
     tint : Color = nagane_theme_sub
 ) {
-    IconButton(
-        onClick = onClick,
+    Icon(
         modifier = Modifier
-            .size(44.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Filled.ArrowBack,
-            contentDescription = "Localized description",
-            tint = tint
-        )
-    }
+            .size(40.dp)
+            .clickable { onClick() },
+        imageVector = Icons.Filled.ArrowBack,
+        contentDescription = "Localized description",
+        tint = tint
+    )
 }
 
 @Composable

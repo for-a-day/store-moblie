@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -232,7 +233,9 @@ fun LoginTableOrder(
                 }
             },
             modifier = Modifier
-                .padding(16.dp),
+                .padding(16.dp)
+                .width(280.dp)
+                .height(52.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = nagane_theme_main,
                 contentColor = nagane_theme_light_0,
@@ -262,7 +265,8 @@ fun TextFieldError(textError: String) {
     }
 }
 
-@Preview
+@Preview(
+    device = Devices.TABLET)
 @Composable
 fun LoginScreenPreview() {
     NaganeTableTheme {

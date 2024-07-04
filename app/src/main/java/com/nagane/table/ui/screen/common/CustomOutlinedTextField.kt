@@ -43,8 +43,8 @@ fun CustomOutlinedTextField(
         ),
         singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = if (isAdmin) nagane_theme_sub else nagane_theme_main,
-            unfocusedTextColor = if (isAdmin) nagane_theme_sub else nagane_theme_main,
+            // focusedTextColor = if (isAdmin) nagane_theme_sub else nagane_theme_main,
+            // unfocusedTextColor = if (isAdmin) nagane_theme_sub else nagane_theme_main,
             focusedBorderColor = if (isAdmin) nagane_theme_sub else nagane_theme_main,
             unfocusedBorderColor = if (isAdmin) nagane_theme_sub else nagane_theme_main,
             focusedLabelColor = if (isAdmin) nagane_theme_sub else nagane_theme_main,
