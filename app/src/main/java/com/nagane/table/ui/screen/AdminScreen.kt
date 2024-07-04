@@ -1,4 +1,4 @@
-package com.nagane.table.ui.screen.login
+package com.nagane.table.ui.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -37,14 +37,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
 import com.nagane.table.data.api.loginTableApi
 import com.nagane.table.data.entity.StoreTableEntity
 import com.nagane.table.data.table.AppDatabase
 import com.nagane.table.ui.main.Screens
-import com.nagane.table.ui.screen.checkIfLoggedIn
+import com.nagane.table.ui.screen.login.LoginScreen
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
@@ -53,19 +52,20 @@ import com.nagane.table.ui.theme.nagane_theme_main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
-
 @Composable
-fun LoginScreen(navController: NavController) {
+fun AdminScreen(navController: NavController) {
     var isLoggedIn by remember { mutableStateOf<Boolean?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    suspend fun checkIfLoggedIn(): Boolean {
+        delay(1000)
+        return false
+    }
     suspend fun checkIfTableExists(): Boolean {
         val dao = AppDatabase.getDatabase(context).storeTableDao()
         val count = dao.getCount()
-        // return count > 0
-        return true
+        return count > 0
     }
 
 
@@ -94,7 +94,7 @@ fun LoginScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LoginTableOrder(
+            LoginAdmin(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp),
@@ -107,7 +107,7 @@ fun LoginScreen(navController: NavController) {
 }
 
 @Composable
-fun LoginTableOrder(
+fun LoginAdmin(
     navController: NavController,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
@@ -115,17 +115,14 @@ fun LoginTableOrder(
 
     val tableCode = remember { mutableStateOf(TextFieldValue("")) }
     val storeCode = remember { mutableStateOf(TextFieldValue("")) }
-    val tableNumber = remember { mutableStateOf(TextFieldValue("")) }
-    val tableName = remember { mutableStateOf(TextFieldValue("")) }
     val coroutineScope = rememberCoroutineScope()
 
     val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
 
     val allFieldsFilled = tableCode.value.text.isNotEmpty() &&
-            storeCode.value.text.isNotEmpty() &&
-            tableNumber.value.text.isNotEmpty() &&
-            tableName.value.text.isNotEmpty()
+            storeCode.value.text.isNotEmpty()
+
 
     Column(
         modifier = modifier,
@@ -156,68 +153,12 @@ fun LoginTableOrder(
             label = stringResource(id = R.string.store_code),
         )
 
-        // 테이블 번호(숫자만 가능)
-        CustomOutlinedTextField(
-            value = tableNumber.value,
-            onValueChange = {
-                if (it.text.all { char -> char.isDigit() }) {
-                    tableNumber.value = it
-                }
-            },
-            label = stringResource(id = R.string.table_number),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number
-            )
-        )
-
-        // 테이블 이름
-        CustomOutlinedTextField(
-            value = tableName.value,
-            onValueChange = {
-                tableName.value = it
-            },
-            label = stringResource(id = R.string.table_name),
-        )
 
         Button(
 
             onClick = {
                 coroutineScope.launch {
-                    loginTableApi(
-                        tableCode.value.text,
-                        storeCode.value.text,
-                        tableNumber.value.text.toIntOrNull() ?: 0,
-                        tableName.value.text
-                    ) { response ->
-                        if (response != null && response.statusCode == 200) {
-                            // 데이터베이스 인스턴스 가져오기
-                            val db = AppDatabase.getDatabase(context)
-                            val storeTableDao = db.storeTableDao()
 
-                            // 데이터베이스에 저장
-                            val storeTable = StoreTableEntity(
-                                tableCode = tableCode.value.text,
-                                storeCode = storeCode.value.text,
-                                tableNumber = tableNumber.value.text.toIntOrNull() ?: 0,
-                                tableName = tableName.value.text
-                            )
-
-                            // 데이터 삽입
-                            coroutineScope.launch {
-                                storeTableDao.insert(storeTable)
-                            }
-
-                            navController.navigate(Screens.Home.route) {
-                                popUpTo(Screens.Login.route) { inclusive = true }
-                            }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                response?.message ?: "Failed to communicate with server",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
                 }
             },
             modifier = Modifier
@@ -286,10 +227,10 @@ fun TextFieldError(textError: String) {
 
 @Preview
 @Composable
-fun LoginScreenPreview() {
+fun AdminScreenPreview() {
     NaganeTableTheme {
         Surface {
-            LoginScreen(navController = rememberNavController())
+            AdminScreen(navController = rememberNavController())
         }
     }
 }
