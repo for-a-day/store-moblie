@@ -21,9 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nagane.table.ui.theme.NaganeTypography
+import com.nagane.table.ui.theme.nagane_theme_extra
 import com.nagane.table.ui.theme.nagane_theme_light_6
 import com.nagane.table.ui.theme.nagane_theme_main
 import com.nagane.table.ui.theme.nagane_theme_sub
@@ -43,12 +45,15 @@ fun CustomAppBarUI(
     rightButton  :@Composable () -> Unit = {
         Box(modifier = Modifier.width(44.dp))
     },
+    backgroundColor : Color = nagane_theme_main,
+    subColor : Color = nagane_theme_sub
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(nagane_theme_main)
+            .background(backgroundColor)
     ) {
+        Spacer(modifier = Modifier.height(14.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -59,7 +64,7 @@ fun CustomAppBarUI(
             leftButton()
             Text(text = title,
                 style = NaganeTypography.h4,
-                color = nagane_theme_sub)
+                color = subColor)
             rightButton()
         }
     }
@@ -68,6 +73,7 @@ fun CustomAppBarUI(
 @Composable
 fun BackButton(
     onClick: () -> Unit,
+    tint : Color = nagane_theme_sub
 ) {
     IconButton(
         onClick = onClick,
@@ -76,7 +82,8 @@ fun BackButton(
     ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
-            contentDescription = "Localized description"
+            contentDescription = "Localized description",
+            tint = tint
         )
     }
 }
@@ -92,7 +99,7 @@ fun SettingButton(
     ) {
         Icon(
             imageVector = Icons.Filled.Settings,
-            tint = nagane_theme_light_6,
+            tint = nagane_theme_sub,
             contentDescription = "Localized description"
         )
     }
@@ -109,7 +116,7 @@ fun ReportingButton(
     ) {
         Icon(
             imageVector = Icons.Default.MoreHoriz,
-            tint = nagane_theme_light_6,
+            tint = nagane_theme_sub,
             contentDescription = "Localized description"
         )
     }

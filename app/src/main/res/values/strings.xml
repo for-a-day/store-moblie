@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">NaganeTable</string>
 
+    <string name="welcome_title">환영합니다!</string>
     <string name="login_title">테이블 정보를 입력해주세요.</string>
     <string name="table_code">테이블 코드</string>
     <string name="store_code">가맹점 코드</string>
     <string name="table_number">테이블 번호</string>
     <string name="table_name">테이블명</string>
     <string name="table_login_btn">기기 등록</string>
+
+    <string name="admin_login_title">관리자 로그인을 위한 정보를 입력해주세요.</string>
+    <string name="admin_login_btn">로그인</string>
 
 </resources>

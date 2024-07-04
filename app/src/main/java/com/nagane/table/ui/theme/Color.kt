@@ -24,7 +24,7 @@ val nagane_theme_light_10 = Color(0xFF0A0A0A)
 
 val nagane_theme_main = Color(0xFFD93D04)
 val nagane_theme_mainsub = Color(0xFFD64800)
-val nagane_theme_sub = Color(0xFFD9D1B8)
+val nagane_theme_sub = Color(0xFFFDF8E7)
 val nagane_theme_extra = Color(0xFF3E4019)
 val nagane_theme_extra_s = Color(0xFF73641D)
 val nagane_theme_extra_t = Color(0xFFBFAC4E)

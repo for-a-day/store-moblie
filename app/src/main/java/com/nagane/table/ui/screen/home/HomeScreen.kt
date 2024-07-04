@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
+import com.nagane.table.ui.screen.MoveAdminButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
 import com.nagane.table.ui.theme.NaganeTableTheme
 import kotlinx.coroutines.Job
@@ -38,30 +39,6 @@ fun HomeScreen(
     var timerJob by remember { mutableStateOf<Job?>(null) }
     val scope = rememberCoroutineScope()
 
-    fun resetCounter() {
-        timerJob?.cancel()
-        count = 0
-    }
-
-    fun startTimer() {
-        timerJob = scope.launch {
-            delay(10000L)
-            resetCounter()
-        }
-    }
-
-    fun onButtonClick() {
-        if (count == 0) {
-            startTimer()
-        }
-
-        count++
-
-        if (count >= 5) {
-            navController.navigate("admin")
-            resetCounter()
-        }
-    }
 
     Scaffold(
         modifier = Modifier
@@ -69,13 +46,7 @@ fun HomeScreen(
         topBar = { CustomAppBarUI(
             title = "",
             leftButton = {
-                Image(
-                    modifier = Modifier
-                        .padding(vertical = 16.dp)
-                        .clickable { onButtonClick() },
-                    painter = painterResource(id = R.drawable.nagane_logo_m),
-                    contentDescription = "Logo of Nagane" // 이 부분에 이미지에 대한 설명을 적습니다.
-                )
+                MoveAdminButton(navController = navController)
             }
         ) }
     ) {

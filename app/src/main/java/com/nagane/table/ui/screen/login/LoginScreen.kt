@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -45,11 +46,14 @@ import com.nagane.table.data.entity.StoreTableEntity
 import com.nagane.table.data.table.AppDatabase
 import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.checkIfLoggedIn
+import com.nagane.table.ui.screen.common.CustomOutlinedTextField
+import com.nagane.table.ui.screen.common.LoginInfo
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_8
 import com.nagane.table.ui.theme.nagane_theme_main
+import com.nagane.table.ui.theme.nagane_theme_sub
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -65,7 +69,7 @@ fun LoginScreen(navController: NavController) {
         val dao = AppDatabase.getDatabase(context).storeTableDao()
         val count = dao.getCount()
         // return count > 0
-        return true
+        return false
     }
 
 
@@ -90,8 +94,8 @@ fun LoginScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
-                .verticalScroll(rememberScrollState()),
+                .padding(it),
+                // .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LoginTableOrder(
@@ -132,10 +136,11 @@ fun LoginTableOrder(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = stringResource(id = R.string.login_title),
-            style = NaganeTypography.h1,
-            modifier = Modifier.padding(top = 64.dp, bottom = 12.dp)
+        LoginInfo(
+            logoImage = R.drawable.nagane_light_b,
+            firstTitle = R.string.welcome_title,
+            secondTitle = R.string.login_title,
+            titleColor = nagane_theme_main
         )
 
         // 테이블 코드
@@ -147,6 +152,8 @@ fun LoginTableOrder(
             label = stringResource(id = R.string.table_code),
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // 가맹점 코드
         CustomOutlinedTextField(
             value = storeCode.value,
@@ -155,6 +162,9 @@ fun LoginTableOrder(
             },
             label = stringResource(id = R.string.store_code),
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
 
         // 테이블 번호(숫자만 가능)
         CustomOutlinedTextField(
@@ -170,6 +180,8 @@ fun LoginTableOrder(
             )
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // 테이블 이름
         CustomOutlinedTextField(
             value = tableName.value,
@@ -180,7 +192,6 @@ fun LoginTableOrder(
         )
 
         Button(
-
             onClick = {
                 coroutineScope.launch {
                     loginTableApi(
@@ -235,39 +246,6 @@ fun LoginTableOrder(
             )
         }
     }
-}
-
-@Composable
-fun CustomOutlinedTextField(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
-    label: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    // imeAction: ImeAction = ImeAction.Next,
-    onImeAction: () -> Unit = {}
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = {
-            Text(
-                text = label,
-                style = NaganeTypography.p
-            )
-        },
-//        modifier = Modifier
-//            .onFocusChanged { focusState ->
-//
-//            },
-        textStyle = NaganeTypography.p,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = KeyboardActions(
-            onDone = {
-                onImeAction()
-            }
-        ),
-        singleLine = true
-    )
 }
 
 
