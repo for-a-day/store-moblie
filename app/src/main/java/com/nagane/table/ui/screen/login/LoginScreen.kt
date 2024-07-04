@@ -49,19 +49,30 @@ import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_8
 import com.nagane.table.ui.theme.nagane_theme_main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-suspend fun checkIfLoggedIn(): Boolean {
-    // delay(1000)
-    return false
-}
+
+
 @Composable
 fun LoginScreen(navController: NavHostController) {
     var isLoggedIn by remember { mutableStateOf<Boolean?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    suspend fun checkIfLoggedIn(): Boolean {
+        delay(1000)
+        return false
+    }
+    suspend fun checkIfTableExists(): Boolean {
+        val dao = AppDatabase.getDatabase(context).storeTableDao()
+        val count = dao.getCount()
+        return count > 0
+    }
+
 
     LaunchedEffect(Unit) {
-        isLoggedIn = checkIfLoggedIn()
+        isLoggedIn = checkIfTableExists()
     }
 
     LaunchedEffect(isLoggedIn) {

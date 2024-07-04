@@ -16,7 +16,7 @@ data class StoreTableEntity (
     var storeCode : String,
     // 현재 테이블 번호
     @ColumnInfo(name="tableNumber")
-    val tableNumber: Number,
+    val tableNumber: Int,
     // 현재 테이블 이름
     @ColumnInfo(name="tableName")
     val tableName : String,
