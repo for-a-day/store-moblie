@@ -1,7 +1,7 @@
 package com.nagane.table.data.model
 
 data class Category(
-    val categoryNo: Int?,
+    val categoryNo: Int,
     val categoryName: String
 )
 

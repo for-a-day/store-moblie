@@ -2,6 +2,7 @@ package com.nagane.table.ui.screen.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -11,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -28,9 +28,9 @@ import com.nagane.table.ui.theme.nagane_theme_sub
 
 @Composable
 fun CategoryRow(
-    homeViewModel: HomeViewModel = viewModel()
+    menuViewModel: MenuViewModel = viewModel()
 ) {
-    val categories by homeViewModel.categories
+    val categories by menuViewModel.categories
     var nowSelected by remember { mutableIntStateOf(0) }
 
     LazyRow(
@@ -43,6 +43,7 @@ fun CategoryRow(
                 nowSelected = nowSelected,
                 onClick = { categoryNo ->
                     nowSelected = categoryNo
+                    menuViewModel.fetchMenus(categoryNo)
                 }
             )
         }
@@ -57,8 +58,10 @@ fun CategoryButton(
     onClick: (Int) -> Unit = {},
 ) {
     Button(
+        modifier = Modifier
+            .height(60.dp),
         onClick = {
-            category.categoryNo?.let { onClick(it) }
+            onClick(category.categoryNo)
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = if (nowSelected == category.categoryNo) nagane_theme_main else Color.Transparent,
@@ -70,7 +73,7 @@ fun CategoryButton(
     ) {
         Text(
             text = category.categoryName,
-            style = NaganeTypography.b,
+            style = NaganeTypography.h1,
             color = if (nowSelected == category.categoryNo) nagane_theme_sub else nagane_theme_main
         )
     }
