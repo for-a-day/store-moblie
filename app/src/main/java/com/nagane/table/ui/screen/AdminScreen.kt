@@ -82,7 +82,7 @@ fun AdminScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                // .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState())
                 .background(nagane_theme_main),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -118,7 +118,9 @@ fun LoginAdmin(
 
 
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

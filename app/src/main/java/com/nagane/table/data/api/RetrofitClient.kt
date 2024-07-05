@@ -29,14 +29,13 @@ object RetrofitClient {
     ) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
+                val responseBody = response.body()
                 if (response.isSuccessful) {
-                    val responseBody = response.body()
                     Log.d("API_CALL", "onResponse 성공: $responseBody")
-                    onResult(responseBody)
                 } else {
                     Log.d("API_CALL", "onResponse 실패: ${response.code()}")
-                    onResult(null)
                 }
+                onResult(responseBody)
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {

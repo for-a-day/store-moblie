@@ -93,8 +93,19 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CategoryRow()
+            HomeContent()
         }
+    }
+}
+
+@Composable
+private fun HomeContent() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp)
+    ) {
+        CategoryRow()
     }
 }
 

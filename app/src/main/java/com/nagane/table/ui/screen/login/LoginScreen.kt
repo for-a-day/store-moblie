@@ -38,12 +38,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
-import com.nagane.table.data.api.loginTableApi
 import com.nagane.table.data.entity.StoreTableEntity
+import com.nagane.table.data.model.TableLogin
 import com.nagane.table.data.table.AppDatabase
 import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.checkIfLoggedIn
@@ -61,7 +63,10 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
+) {
     var isLoggedIn by remember { mutableStateOf<Boolean?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -70,12 +75,12 @@ fun LoginScreen(navController: NavController) {
         val dao = AppDatabase.getDatabase(context).storeTableDao()
         val count = dao.getCount()
         // return count > 0
-        return true
+        return false
     }
 
 
     LaunchedEffect(Unit) {
-        isLoggedIn = checkIfTableExists()
+        isLoggedIn = loginViewModel.checkIfTableExists()
     }
 
     LaunchedEffect(isLoggedIn) {
@@ -95,15 +100,33 @@ fun LoginScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
-                // .verticalScroll(rememberScrollState()),
+                .padding(it)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LoginTableOrder(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp),
-                navController = navController
+                navController = navController,
+                onClick = { tableLogin ->
+                    loginViewModel.loginTable(
+                        tableLogin,
+                        onResult = { response ->
+                            if (response.statusCode == 200) {
+                                    navController.navigate(Screens.Home.route) {
+                                    popUpTo(Screens.Login.route) { inclusive = true }
+                                }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    response?.message ?: "서버와의 통신이 불가능합니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    )
+                }
             )
 
         }
@@ -115,7 +138,7 @@ fun LoginScreen(navController: NavController) {
 fun LoginTableOrder(
     navController: NavController,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    onClick: (TableLogin) -> Unit = {},
 ) {
 
     val tableCode = remember { mutableStateOf(TextFieldValue("")) }
@@ -133,7 +156,9 @@ fun LoginTableOrder(
             tableName.value.text.isNotEmpty()
 
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -193,45 +218,53 @@ fun LoginTableOrder(
         )
 
         Button(
-            onClick = {
-                coroutineScope.launch {
-                    loginTableApi(
-                        tableCode.value.text,
+//            onClick = {
+//                coroutineScope.launch {
+//                    loginTableApi(
+//                        tableCode.value.text,
+//                        storeCode.value.text,
+//                        tableNumber.value.text.toIntOrNull() ?: 0,
+//                        tableName.value.text
+//                    ) { response ->
+//                        if (response != null && response.statusCode == 200) {
+//                            // 데이터베이스 인스턴스 가져오기
+//                            val db = AppDatabase.getDatabase(context)
+//                            val storeTableDao = db.storeTableDao()
+//
+//                            // 데이터베이스에 저장
+//                            val storeTable = StoreTableEntity(
+//                                tableCode = tableCode.value.text,
+//                                storeCode = storeCode.value.text,
+//                                tableNumber = tableNumber.value.text.toIntOrNull() ?: 0,
+//                                tableName = tableName.value.text
+//                            )
+//
+//                            // 데이터 삽입
+//                            coroutineScope.launch {
+//                                storeTableDao.insert(storeTable)
+//                            }
+//
+//                            navController.navigate(Screens.Home.route) {
+//                                popUpTo(Screens.Login.route) { inclusive = true }
+//                            }
+//                        } else {
+//                            Toast.makeText(
+//                                context,
+//                                response?.message ?: "서버와의 연결에 실패했습니다.",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    }
+//                }
+//            },
+            onClick = { onClick(
+                TableLogin(
+                    tableCode.value.text,
                         storeCode.value.text,
-                        tableNumber.value.text.toIntOrNull() ?: 0,
+                        tableNumber.value.text.toIntOrNull() ?: -99,
                         tableName.value.text
-                    ) { response ->
-                        if (response != null && response.statusCode == 200) {
-                            // 데이터베이스 인스턴스 가져오기
-                            val db = AppDatabase.getDatabase(context)
-                            val storeTableDao = db.storeTableDao()
-
-                            // 데이터베이스에 저장
-                            val storeTable = StoreTableEntity(
-                                tableCode = tableCode.value.text,
-                                storeCode = storeCode.value.text,
-                                tableNumber = tableNumber.value.text.toIntOrNull() ?: 0,
-                                tableName = tableName.value.text
-                            )
-
-                            // 데이터 삽입
-                            coroutineScope.launch {
-                                storeTableDao.insert(storeTable)
-                            }
-
-                            navController.navigate(Screens.Home.route) {
-                                popUpTo(Screens.Login.route) { inclusive = true }
-                            }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                response?.message ?: "Failed to communicate with server",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-            },
+                )
+            ) },
             modifier = Modifier
                 .padding(16.dp)
                 .width(280.dp)
