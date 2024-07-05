@@ -81,6 +81,10 @@ dependencies {
     implementation(libs.adapter.rxjava2)
     implementation(libs.rxjava)
 
+    /** material */
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.material.icons.extended.v143)git 
+
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     testImplementation(libs.kotlinx.coroutines.test)
