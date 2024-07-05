@@ -90,7 +90,7 @@ private fun HomeContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp)
+            .padding(horizontal = 64.dp)
     ) {
         CategoryRow()
 
@@ -106,7 +106,6 @@ private fun HomeContent() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
             ) {
                 MenuList()
             }
