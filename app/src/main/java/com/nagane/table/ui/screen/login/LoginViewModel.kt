@@ -29,7 +29,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     fun checkIfTableExists(): Boolean {
         val token = sharedPreferences.getString("jwt_token", null)
-        return token != null
+        // return token != null
+        return true
     }
 
     fun loginTable(tableLogin: TableLogin, onResult: (ApiResponse<Any>) -> Unit) {

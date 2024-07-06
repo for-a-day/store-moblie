@@ -59,7 +59,7 @@ fun CategoryButton(
 ) {
     Button(
         modifier = Modifier
-            .height(60.dp),
+            .height(56.dp),
         onClick = {
             onClick(category.categoryNo)
         },
@@ -73,7 +73,7 @@ fun CategoryButton(
     ) {
         Text(
             text = category.categoryName,
-            style = NaganeTypography.h1,
+            style = NaganeTypography.h2,
             color = if (nowSelected == category.categoryNo) nagane_theme_sub else nagane_theme_main
         )
     }

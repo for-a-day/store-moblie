@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -129,31 +130,34 @@ private fun MenuBox(
                 thickness = 2.dp,
                 color = nagane_theme_main.copy(alpha = 0.5f)
             )
-            Text(
-                modifier = Modifier.padding(
-                    horizontal = 16.dp
-                ),
-                text = menu.menuName,
-                style = NaganeTypography.h1,
-                fontSize = 24.sp,
-                color = nagane_theme_light_9,
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                modifier = Modifier.padding(
-                    horizontal = 16.dp
-                ),
-                text = "${menu.price}원",
-                style = NaganeTypography.i,
-                fontSize = 20.sp,
-                color = nagane_theme_light_7,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Column(
+                modifier = Modifier
+                    .width(180.dp)
+                    .padding(horizontal = 16.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                Text(
+                    text = menu.menuName,
+                    style = NaganeTypography.h1,
+                    fontSize = 22.sp,
+                    color = nagane_theme_light_9,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                // Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "${menu.price}원",
+                    style = NaganeTypography.i,
+                    fontSize = 18.sp,
+                    color = nagane_theme_light_7,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
@@ -161,10 +165,10 @@ private fun MenuBox(
 @Preview
 @Composable
 fun MenuImage(
-    img: Int = R.drawable.cake_piece
+    img: Int = R.drawable.cake_piece,
 ) {
     Card(
-        modifier = Modifier.size(200.dp),
+        modifier = Modifier.size(160.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         )
