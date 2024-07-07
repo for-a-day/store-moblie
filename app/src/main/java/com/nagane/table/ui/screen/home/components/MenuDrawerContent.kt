@@ -1,4 +1,4 @@
-package com.nagane.table.ui.screen.home
+package com.nagane.table.ui.screen.home.components
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nagane.table.R
 import com.nagane.table.data.model.CartCreateDto
+import com.nagane.table.ui.screen.home.MenuViewModel
+import com.nagane.table.ui.screen.home.CartViewModel
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_main
 import com.nagane.table.ui.theme.nagane_theme_sub
@@ -48,7 +50,7 @@ import kotlinx.coroutines.launch
 fun MenuDrawerContent(
     menuViewModel: MenuViewModel = viewModel(),
     closeDrawer: () -> Unit = {},
-    orderViewModel: OrderViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel()
 ) {
     val menu by menuViewModel.menuDetail
     val scrollState = rememberScrollState()
@@ -170,7 +172,7 @@ fun MenuDrawerContent(
                         scope.launch {
                             scrollState.scrollTo(0)
                         }
-                        orderViewModel.addCart(
+                        cartViewModel.addCart(
                             CartCreateDto(
                                 menuNo = menu.menuNo,
                                 menuName = menu.menuName,

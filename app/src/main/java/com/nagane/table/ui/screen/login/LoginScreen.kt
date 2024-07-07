@@ -68,16 +68,7 @@ fun LoginScreen(
     loginViewModel: LoginViewModel = viewModel(),
 ) {
     var isLoggedIn by remember { mutableStateOf<Boolean?>(null) }
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-
-    suspend fun checkIfTableExists(): Boolean {
-        val dao = AppDatabase.getDatabase(context).storeTableDao()
-        val count = dao.getCount()
-        // return count > 0
-        return false
-    }
-
 
     LaunchedEffect(Unit) {
         isLoggedIn = loginViewModel.checkIfTableExists()
@@ -128,9 +119,7 @@ fun LoginScreen(
                     )
                 }
             )
-
         }
-
     }
 }
 

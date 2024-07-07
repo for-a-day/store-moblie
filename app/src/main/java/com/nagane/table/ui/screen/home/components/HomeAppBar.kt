@@ -1,4 +1,4 @@
-package com.nagane.table.ui.screen.home
+package com.nagane.table.ui.screen.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.nagane.table.ui.screen.MoveAdminButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI

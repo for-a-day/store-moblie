@@ -1,45 +1,16 @@
 package com.nagane.table.ui.screen.home
 
 import android.annotation.SuppressLint
-import android.util.Log.i
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -60,12 +31,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
-import com.nagane.table.ui.screen.MoveAdminButton
-import com.nagane.table.ui.screen.common.CustomAppBarUI
+import com.nagane.table.ui.screen.home.components.CategoryRow
+import com.nagane.table.ui.screen.home.components.CustomBottomBar
+import com.nagane.table.ui.screen.home.components.CustomModalDrawerContent
+import com.nagane.table.ui.screen.home.components.HomeAppBar
+import com.nagane.table.ui.screen.home.components.MenuList
 import com.nagane.table.ui.theme.NaganeTableTheme
-import com.nagane.table.ui.theme.NaganeTypography
-import com.nagane.table.ui.theme.nagane_theme_main
-import com.nagane.table.ui.theme.nagane_theme_sub
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -73,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavController,
-    orderViewModel: OrderViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel()
 )
 {
 
@@ -110,7 +81,7 @@ fun HomeScreen(
                         navController = navController,
                         onClickGoCart = {
                             scope.launch {
-                                orderViewModel.fetchCartItems()
+                                cartViewModel.fetchCartItems()
                                 nowCase = "cart"
                                 delay(100L)
                                 drawerState.apply {

@@ -1,4 +1,4 @@
-package com.nagane.table.ui.screen.home
+package com.nagane.table.ui.screen.home.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nagane.table.R
 import com.nagane.table.data.model.Cart
+import com.nagane.table.ui.screen.home.CartViewModel
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_7
 import com.nagane.table.ui.theme.nagane_theme_light_9
@@ -61,9 +62,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun CartDrawerContent(
     closeDrawer: () -> Unit = {},
-    orderViewModel: OrderViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel()
 ) {
+    val carts by cartViewModel.cartItems
 
+    var nowTotalPrice by remember { mutableIntStateOf(carts.sumOf { it.price * it.quantity }) }
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -90,7 +93,13 @@ fun CartDrawerContent(
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis
             )
-            CartList(scrollState = scrollState)
+            CartList(
+                scrollState = scrollState,
+                carts = carts,
+                onChangeTotalPrice = { price ->
+                    nowTotalPrice += price
+                }
+            )
             Spacer(modifier = Modifier.height(120.dp))
         }
 
@@ -135,7 +144,7 @@ fun CartDrawerContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(id = R.string.total_price) + " 원",
+                        text = "$nowTotalPrice 원",
                         style = NaganeTypography.h1,
                         color = nagane_theme_sub
                     )
@@ -188,10 +197,11 @@ fun CartDrawerContent(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CartList(
-    orderViewModel: OrderViewModel = viewModel(),
-    scrollState : ScrollState = rememberScrollState()
+    cartViewModel: CartViewModel = viewModel(),
+    carts : List<Cart>,
+    scrollState : ScrollState = rememberScrollState(),
+    onChangeTotalPrice : (Int) -> Unit = {}
 ) {
-    val carts by orderViewModel.cartItems
 
     if (carts.isEmpty()) {
         Column(
@@ -225,7 +235,8 @@ fun CartList(
             ) {
             FlowRow(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    // .fillMaxSize()
+                    .weight(1f),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 maxItemsInEachRow = 1
             ) {
@@ -233,17 +244,19 @@ fun CartList(
                     CartBox(
                         cart,
                         onDelete = {
-                            orderViewModel.deleteCartMenu(cart.menuNo)
+                            cartViewModel.deleteCartMenu(cart.menuNo)
                         },
                         changeQuantity = { isIncre: Boolean ->
                             var changedQuantity = cart.quantity
 
                             if (isIncre) {
                                 changedQuantity += 1
+                                onChangeTotalPrice(cart.price)
                             } else {
                                 changedQuantity -= 1
+                                onChangeTotalPrice(-cart.price)
                             }
-                            orderViewModel.updateCartQuantity(cart.cartNo, changedQuantity)
+                            cartViewModel.updateCartQuantity(cart.cartNo, changedQuantity)
                             cart.quantity = changedQuantity
                         }
                     )

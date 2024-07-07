@@ -13,7 +13,7 @@ import com.nagane.table.data.model.CartCreateDto
 import com.nagane.table.data.table.AppDatabase
 import kotlinx.coroutines.launch
 
-class OrderViewModel(application: Application) : AndroidViewModel(application) {
+class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val cartDao : CartDao = AppDatabase.getDatabase(application).cartDao()
 
     private val _cartItems = mutableStateOf<List<Cart>>(mutableListOf())

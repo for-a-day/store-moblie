@@ -1,4 +1,4 @@
-package com.nagane.table.ui.screen.home
+package com.nagane.table.ui.screen.home.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
