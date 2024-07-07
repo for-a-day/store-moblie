@@ -49,9 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nagane.table.R
-import com.nagane.table.data.model.Basket
+import com.nagane.table.data.model.Cart
 import com.nagane.table.ui.theme.NaganeTypography
-import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_7
 import com.nagane.table.ui.theme.nagane_theme_light_9
 import com.nagane.table.ui.theme.nagane_theme_main
@@ -60,7 +59,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun BasketDrawerContent(
+fun CartDrawerContent(
     closeDrawer: () -> Unit = {},
     orderViewModel: OrderViewModel = viewModel()
 ) {
@@ -83,7 +82,7 @@ fun BasketDrawerContent(
             Text(
                 modifier = Modifier
                     .padding(horizontal = 32.dp),
-                text = stringResource(id = R.string.basket_title),
+                text = stringResource(id = R.string.cart_title),
                 style = NaganeTypography.b,
                 fontSize = 24.sp,
                 color = nagane_theme_sub,
@@ -91,7 +90,7 @@ fun BasketDrawerContent(
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis
             )
-            BasketList(scrollState = scrollState)
+            CartList(scrollState = scrollState)
             Spacer(modifier = Modifier.height(120.dp))
         }
 
@@ -188,13 +187,13 @@ fun BasketDrawerContent(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun BasketList(
+fun CartList(
     orderViewModel: OrderViewModel = viewModel(),
     scrollState : ScrollState = rememberScrollState()
 ) {
-    val baskets by orderViewModel.basketItems
+    val carts by orderViewModel.cartItems
 
-    if (baskets.isEmpty()) {
+    if (carts.isEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -209,7 +208,7 @@ fun BasketList(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = stringResource(id = R.string.empty_basket),
+                text = stringResource(id = R.string.empty_cart),
                 style = NaganeTypography.h1,
                 fontSize = 22.sp,
                 color = nagane_theme_sub,
@@ -230,22 +229,22 @@ fun BasketList(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 maxItemsInEachRow = 1
             ) {
-                baskets.map {  basket ->
-                    BasketBox(
-                        basket,
+                carts.map {  cart ->
+                    CartBox(
+                        cart,
                         onDelete = {
-                            orderViewModel.deleteBasketMenu(basket.menuNo)
+                            orderViewModel.deleteCartMenu(cart.menuNo)
                         },
                         changeQuantity = { isIncre: Boolean ->
-                            var changedQuantity = basket.quantity
+                            var changedQuantity = cart.quantity
 
                             if (isIncre) {
                                 changedQuantity += 1
                             } else {
                                 changedQuantity -= 1
                             }
-                            orderViewModel.updateBasketQuantity(basket.basketNo, changedQuantity)
-                            basket.quantity = changedQuantity
+                            orderViewModel.updateCartQuantity(cart.cartNo, changedQuantity)
+                            cart.quantity = changedQuantity
                         }
                     )
                 }
@@ -257,12 +256,12 @@ fun BasketList(
 }
 
 @Composable
-private fun BasketBox(
-    basket: Basket,
+private fun CartBox(
+    cart: Cart,
     onDelete: (Long) -> Unit = {},
     changeQuantity: (Boolean) -> Unit = { isIncre: Boolean -> }
 ) {
-    var nowQuality by remember { mutableIntStateOf(basket.quantity) }
+    var nowQuality by remember { mutableIntStateOf(cart.quantity) }
 
     Card(
         modifier = Modifier
@@ -297,7 +296,7 @@ private fun BasketBox(
                 verticalArrangement = Arrangement.SpaceAround
             ) {
                 Text(
-                    text = basket.menuName,
+                    text = cart.menuName,
                     style = NaganeTypography.h1,
                     fontSize = 24.sp,
                     color = nagane_theme_light_9,
@@ -322,7 +321,7 @@ private fun BasketBox(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "${basket.price}원",
+                        text = "${cart.price}원",
                         style = NaganeTypography.p,
                         fontSize = 20.sp,
                         color = nagane_theme_light_7,

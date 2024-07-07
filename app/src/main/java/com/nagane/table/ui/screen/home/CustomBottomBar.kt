@@ -36,7 +36,7 @@ import com.nagane.table.ui.theme.nagane_theme_sub
 @Composable
 fun CustomBottomBar(
     onClickBill: () -> Unit = {},
-    onClickGoBasket: () -> Unit = {}
+    onClickGoCart: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -53,8 +53,8 @@ fun CustomBottomBar(
         )
         BottomButton(
             Icons.Filled.ShoppingCartCheckout,
-            R.string.bottom_basket,
-            onClickGoBasket
+            R.string.bottom_cart,
+            onClickGoCart
         )
         Spacer(modifier = Modifier.width(8.dp))
     }

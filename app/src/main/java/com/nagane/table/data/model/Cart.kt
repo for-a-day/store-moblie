@@ -1,18 +1,18 @@
 package com.nagane.table.data.model
 
-data class Basket(
-    var basketNo : Long,
+data class Cart(
+    var cartNo : Long,
     var menuNo : Long,
     var menuName : String,
     var price : Int,
     var quantity: Int
 )
 
-data class BasketItems(
-    val basketList: List<Basket>
+data class CartItems(
+    val cartList: List<Cart>
 )
 
-data class BasketCreateDto(
+data class CartCreateDto(
     var menuNo : Long,
     var menuName : String,
     var price : Int,

@@ -6,9 +6,9 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 // 장바구니 entity
-@Entity(tableName = "Basket",
+    @Entity(tableName = "Cart",
     indices = [Index(value = ["menuNo"], unique = true)])
-data class BasketEntity(
+data class CartEntity(
     // 메뉴 번호(pk)
     @ColumnInfo(name = "menuNo")
     var menuNo : Long,
@@ -26,8 +26,8 @@ data class BasketEntity(
     var quantity : Int = 1,
 )  {
     // 장바구니 번호(pk)
-    @ColumnInfo(name = "basketNo")
+    @ColumnInfo(name = "cartNo")
     @PrimaryKey(autoGenerate = true)
-    var basketNo: Long = 0
+    var cartNo: Long = 0
 }
 

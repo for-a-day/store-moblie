@@ -108,10 +108,10 @@ fun HomeScreen(
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     HomeContent(
                         navController = navController,
-                        onClickGoBasket = {
+                        onClickGoCart = {
                             scope.launch {
-                                orderViewModel.fetchBasketItems()
-                                nowCase = "basket"
+                                orderViewModel.fetchCartItems()
+                                nowCase = "cart"
                                 delay(100L)
                                 drawerState.apply {
                                     if (isClosed) open() else close()
@@ -137,7 +137,7 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     onClickBill: () -> Unit = {},
-    onClickGoBasket: () -> Unit = {},
+    onClickGoCart: () -> Unit = {},
     menuViewModel: MenuViewModel = viewModel(),
     navController: NavController,
     onClickMenu: () -> Unit = {}
@@ -154,7 +154,7 @@ private fun HomeContent(
         bottomBar = {
             CustomBottomBar(
                 onClickBill = onClickBill,
-                onClickGoBasket = onClickGoBasket,
+                onClickGoCart = onClickGoCart,
             )
         }
     ) {

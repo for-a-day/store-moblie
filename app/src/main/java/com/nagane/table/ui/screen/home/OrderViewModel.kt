@@ -6,87 +6,85 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.nagane.table.data.dao.BasketDao
-import com.nagane.table.data.entity.BasketEntity
-import com.nagane.table.data.model.Basket
-import com.nagane.table.data.model.BasketCreateDto
+import com.nagane.table.data.dao.CartDao
+import com.nagane.table.data.entity.CartEntity
+import com.nagane.table.data.model.Cart
+import com.nagane.table.data.model.CartCreateDto
 import com.nagane.table.data.table.AppDatabase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class OrderViewModel(application: Application) : AndroidViewModel(application) {
-    private val basketDao : BasketDao = AppDatabase.getDatabase(application).basketDao()
+    private val cartDao : CartDao = AppDatabase.getDatabase(application).cartDao()
 
-    private val _basketItems = mutableStateOf<List<Basket>>(mutableListOf())
-    val basketItems: State<List<Basket>> = _basketItems
+    private val _cartItems = mutableStateOf<List<Cart>>(mutableListOf())
+    val cartItems: State<List<Cart>> = _cartItems
 
-    fun fetchBasketItems() {
+    fun fetchCartItems() {
         viewModelScope.launch {
-            loadBasketItems()
+            loadCartItems()
         }
     }
 
-    private suspend fun loadBasketItems() {
+    private suspend fun loadCartItems() {
         try {
-            val basketEntity = basketDao.getBasket()
+            val cartEntity = cartDao.getCart()
 
-            if (basketEntity != null) {
-                _basketItems.value = listOf(
-                    Basket(
-                        basketNo = basketEntity.basketNo ?: 0,
-                        menuNo = basketEntity.menuNo,
-                        menuName = basketEntity.menuName,
-                        quantity = basketEntity.quantity,
-                        price = basketEntity.price
+            if (cartEntity != null) {
+                _cartItems.value = listOf(
+                    Cart(
+                        cartNo = cartEntity.cartNo ?: 0,
+                        menuNo = cartEntity.menuNo,
+                        menuName = cartEntity.menuName,
+                        quantity = cartEntity.quantity,
+                        price = cartEntity.price
                     )
                 )
             } else {
-                _basketItems.value = emptyList()
+                _cartItems.value = emptyList()
             }
         } catch (e : Exception) {
 
         }
     }
 
-    fun addBasket(basket: BasketCreateDto, onResult: (Boolean) -> Unit = {}) {
+    fun addCart(cart: CartCreateDto, onResult: (Boolean) -> Unit = {}) {
         viewModelScope.launch {
-            insertBasket(basket, onResult)
+            insertCart(cart, onResult)
         }
     }
 
-    fun deleteBasketMenu(basketNo: Long) {
+    fun deleteCartMenu(cartNo: Long) {
         viewModelScope.launch {
-            basketDao.deleteByMenuNo(basketNo)
-            loadBasketItems()
+            cartDao.deleteByMenuNo(cartNo)
+            loadCartItems()
         }
     }
 
-    fun updateBasketQuantity(basketNo: Long, changedQuantity: Int) {
+    fun updateCartQuantity(cartNo: Long, changedQuantity: Int) {
         viewModelScope.launch {
-            changeBasketQuantity(basketNo, changedQuantity)
+            changeCartQuantity(cartNo, changedQuantity)
         }
     }
 
-    private suspend fun changeBasketQuantity(
-        basketNo: Long, changedQuantity: Int
+    private suspend fun changeCartQuantity(
+        cartNo: Long, changedQuantity: Int
     ) {
         try {
-            basketDao.updateQuantity(basketNo, changedQuantity)
-            Log.d("BasketDao", "정상적으로 업데이트됐습니다 : $changedQuantity")
-            // loadBasketItems()
+            cartDao.updateQuantity(cartNo, changedQuantity)
+            Log.d("CartDao", "정상적으로 업데이트됐습니다 : $changedQuantity")
+            // loadCartItems()
         } catch (e : Exception) {
 
         }
     }
 
-    private suspend fun insertBasket(basket: BasketCreateDto, onResult: (Boolean) -> Unit) {
+    private suspend fun insertCart(cart: CartCreateDto, onResult: (Boolean) -> Unit) {
         // 메뉴 존재 여부 불러옴
-        val nowMenu = basketDao.getBasketByMenuNo(basket.menuNo)
+        val nowMenu = cartDao.getCartByMenuNo(cart.menuNo)
         // 해당 메뉴가 존재하지 않을 시, 새로 레코드 삽입
         if (nowMenu == null) {
             try {
-                basketDao.insert(BasketEntity(basket.menuNo, basket.menuName, basket.price))
+                cartDao.insert(CartEntity(cart.menuNo, cart.menuName, cart.price))
                 onResult(true)
             } catch (e: Exception) {
                 onResult(false)
@@ -94,7 +92,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         // 해당 메뉴가 이미 장바구니에 담겨 있을 시, 주문 개수 1 추가
         } else {
             try {
-                basketDao.updateQuantity(basketNo = nowMenu.basketNo, newQuantity = nowMenu.quantity + 1)
+                cartDao.updateQuantity(cartNo = nowMenu.cartNo, newQuantity = nowMenu.quantity + 1)
                 onResult(true)
             } catch (e: Exception) {
                 onResult(false)

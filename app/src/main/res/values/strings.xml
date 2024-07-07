@@ -14,16 +14,16 @@
 
     <string name="bottom_home">메뉴</string>
     <string name="bottom_bill">주문내역</string>
-    <string name="bottom_basket">장바구니</string>
+    <string name="bottom_cart">장바구니</string>
 
     <string name="price_title">가격</string>
     <string name="description_title">설명</string>
     <string name="close">닫기</string>
     <string name="add_cart">장바구니 담기</string>
 
-    <string name="basket_title">장바구니</string>
+    <string name="cart_title">장바구니</string>
     <string name="go_charge">결제하기</string>
     <string name="menu_price">단품 가격 : </string>
     <string name="total_price">총 가격 : </string>
-    <string name="empty_basket">장바구니에 담은 항목이 없습니다.</string>
+    <string name="empty_cart">장바구니에 담은 항목이 없습니다.</string>
 </resources>

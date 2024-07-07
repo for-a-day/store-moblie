@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nagane.table.R
-import com.nagane.table.data.model.BasketCreateDto
+import com.nagane.table.data.model.CartCreateDto
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_main
 import com.nagane.table.ui.theme.nagane_theme_sub
@@ -170,8 +170,8 @@ fun MenuDrawerContent(
                         scope.launch {
                             scrollState.scrollTo(0)
                         }
-                        orderViewModel.addBasket(
-                            BasketCreateDto(
+                        orderViewModel.addCart(
+                            CartCreateDto(
                                 menuNo = menu.menuNo,
                                 menuName = menu.menuName,
                                 price = menu.price
