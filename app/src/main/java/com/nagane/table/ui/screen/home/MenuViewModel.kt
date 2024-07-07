@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.nagane.table.data.api.RetrofitClient
 import com.nagane.table.data.model.Category
 import com.nagane.table.data.model.Menu
+import com.nagane.table.data.model.MenuDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -19,6 +20,13 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
     val categories: State<List<Category>> = _categories
     private val _menus = mutableStateOf<List<Menu>>(mutableListOf())
     val menus: State<List<Menu>> = _menus
+    private val _menuDetail = mutableStateOf<MenuDetail>(MenuDetail(1,
+        "너무너무 진짜진짜 맛있는 주인장 추천 특선 케이크",
+        32000,
+        "string",
+        "아주 달콤하고, 아주 달콤하다. 혀를 녹여버릴 것 같은 단맛에 저항하다보면, 어느새 접시 위에 눈 녹듯 사라져 있는 환상의 디저트. 진짜 맛있다. 정말 맛있다. 점장 추천 메뉴. 진짜 너무 정말 맛있으니까 꼭 먹어주었으면 좋겠다. 두 번 먹어라.",
+        false))
+    val menuDetail : State<MenuDetail> = _menuDetail
 
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("table_prefs", Context.MODE_PRIVATE)
@@ -68,6 +76,45 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
                 }
             } catch (e: Exception) {
                 Log.e("API_ERROR", "메뉴 리스트 가져오기 실패 : ${e.message}")
+            }
+        }
+    }
+
+    fun fetchMenuDetail(
+        menuNo: Int
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                Log.d("API_INFO", "선택한 메뉴 상세정보 가져오기")
+                val response = storeCode?.let {
+                    Log.d("API_INFO", "선택한 메뉴 상세정보 가져오기 $it $menuNo")
+                    RetrofitClient.apiService.getMenuDetail(it, menuNo)
+                }
+                if (response != null) {
+                    Log.d("API_INFO", "메뉴 상세 정보 가져오기 성공 : ${response.message}")
+                    if (response.statusCode == 200) {
+                        Log.d("API_INFO", "메뉴 상세 정보 가져오기 성공 : ${response.data}")
+                        val nowMenuDetail = response.data?.let {
+                            it["menu"]?.let { menu ->
+                                MenuDetail(
+                                    menu.menuNo,
+                                    menu.menuName,
+                                    menu.price,
+                                    menu.menuImage,
+                                    menu.description,
+                                    menu.soldOut
+                                )
+                            }
+                        }
+                        if (nowMenuDetail != null) {
+                            _menuDetail.value = nowMenuDetail
+                        }
+                    } else {
+
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("API_ERROR", "메뉴 상세 정보 가져오기 실패 : ${e.message}")
             }
         }
     }

@@ -2,6 +2,7 @@ package com.nagane.table.ui.screen.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,9 +53,11 @@ import com.nagane.table.ui.theme.nagane_theme_main
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MenuList(
-    menuViewModel: MenuViewModel = viewModel()
+    menuViewModel: MenuViewModel = viewModel(),
+    onClick: (Int) -> Unit = {}
 ) {
     val menus by menuViewModel.menus
+
     FlowRow(
         modifier = Modifier
             .fillMaxSize()
@@ -71,7 +74,8 @@ fun MenuList(
                     22 -> R.drawable.cake_hole
                     23 -> R.drawable.cake_tea
                     else -> R.drawable.macarong
-                }
+                },
+                onClick = onClick
             )
 
         }
@@ -108,7 +112,8 @@ private fun MenuBox(
         modifier = Modifier
             .width(240.dp)
             .height(340.dp)
-            .padding(vertical = 16.dp),
+            .padding(vertical = 16.dp)
+            .clickable(onClick = { onClick(menu.menuNo) }),
         colors = CardDefaults.cardColors(
             containerColor = nagane_theme_light_0
         ),
@@ -164,7 +169,7 @@ private fun MenuBox(
 
 @Preview
 @Composable
-fun MenuImage(
+private fun MenuImage(
     img: Int = R.drawable.cake_piece,
 ) {
     Card(

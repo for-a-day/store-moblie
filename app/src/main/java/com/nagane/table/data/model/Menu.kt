@@ -11,3 +11,16 @@ data class Menu(
 data class MenuData(
     val menuList: List<Menu>
 )
+
+data class MenuDetail(
+    val menuNo : Int,
+    val menuName: String,
+    val price : Int,
+    val menuImage: String,
+    val description: String,
+    val soldOut : Boolean
+)
+
+data class MenuDetailData(
+    val menu: MenuDetail
+)

@@ -3,6 +3,8 @@ package com.nagane.table.data.api
 import com.nagane.table.data.model.Category
 import com.nagane.table.data.model.CategoryData
 import com.nagane.table.data.model.MenuData
+import com.nagane.table.data.model.MenuDetail
+import com.nagane.table.data.model.MenuDetailData
 import com.nagane.table.data.model.TableLogin
 import retrofit2.Call
 import retrofit2.http.Body
@@ -28,4 +30,11 @@ interface NaganeAPI {
         @Query("storeCode") storeCode : String,
         @Query("categoryNo") categoryNo : Int,
     ): ApiResponse<MenuData>
+
+    // 메뉴 상세 정보 받아오기
+    @GET("/to/menu")
+    suspend fun getMenuDetail(
+        @Query("storeCode") storeCode : String,
+        @Query("menuNo") menuNo : Int,
+    ) : ApiResponse<Map<String, MenuDetail>>
 }

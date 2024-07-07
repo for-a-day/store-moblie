@@ -15,4 +15,9 @@
     <string name="bottom_home">메뉴</string>
     <string name="bottom_bill">주문내역</string>
     <string name="bottom_basket">장바구니</string>
+
+    <string name="price_title">가격</string>
+    <string name="description_title">설명</string>
+    <string name="close">닫기</string>
+    <string name="add_cart">장바구니 담기</string>
 </resources>
