@@ -1,23 +1,20 @@
 package com.nagane.table.ui.main
 
 sealed class Screens(val route: String) {
-    object Splash : Screens("splash")
-    object Login : Screens("login")
+    data object Splash : Screens("splash")
+    data object Login : Screens("login")
 
-    object Home : Screens("home")
-    object Menu : Screens("menu") {
-        object MenuDetail : Screens("menu/{menuNo}")
+    data object Home : Screens("home")
+
+    data object Order : Screens("order") {
+        data object OrderResult : Screens("orderResult")
     }
 
-    object Order : Screens("order") {
-        object OrderResult : Screens("orderResult")
-    }
+    data object Bill : Screens("bill/{orderNo}")
 
-    object Bill : Screens("bill/{orderNo}")
+    data object Admin : Screens("admin") {
+        data object AdminLogin : Screens("login")
 
-    object Admin : Screens("admin") {
-        object AdminLogin : Screens("login")
-
-        object Logout : Screens("logout")
+        data object Logout : Screens("logout")
     }
 }

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">NaganeTable</string>
 
+    <string name="splash_title_first">언제나 당신의 곁으로 가고는 싶은 가게</string>
+    <string name="splash_title_second">나가네</string>
+
     <string name="welcome_title">환영합니다!</string>
     <string name="login_title">테이블 정보를 입력해주세요.</string>
     <string name="table_code">테이블 코드</string>
@@ -26,4 +29,12 @@
     <string name="menu_price">단품 가격 : </string>
     <string name="total_price">총 가격 : </string>
     <string name="empty_cart">장바구니에 담은 항목이 없습니다.</string>
+
+    <string name="order_title">결제 확인</string>
+    <string name="order_check_title">주문 상세 확인</string>
+    <string name="payment_total_price">총 결제 예정 금액 : </string>
+    <string name="payment_method_select">결제 방법을 선택해주세요.</string>
+
+    <string name="admin_title">관리자 화면</string>
+
 </resources>
