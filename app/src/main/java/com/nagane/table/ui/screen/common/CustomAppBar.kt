@@ -64,7 +64,7 @@ fun CustomAppBarUI(
         ) {
             leftButton()
             Text(text = title,
-                style = NaganeTypography.h2,
+                style = NaganeTypography.h1,
                 color = subColor)
             rightButton()
         }

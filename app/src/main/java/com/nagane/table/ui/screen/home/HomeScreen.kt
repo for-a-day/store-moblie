@@ -73,10 +73,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavController,
-    menuViewModel: MenuViewModel = viewModel())
+    orderViewModel: OrderViewModel = viewModel()
+)
 {
 
-    val nowCase by rememberSaveable {
+    var nowCase by rememberSaveable {
         mutableStateOf("menu")
     }
 
@@ -109,12 +110,16 @@ fun HomeScreen(
                         navController = navController,
                         onClickGoBasket = {
                             scope.launch {
+                                orderViewModel.fetchBasketItems()
+                                nowCase = "basket"
+                                delay(100L)
                                 drawerState.apply {
                                     if (isClosed) open() else close()
                                 }
                             }
                         },
                         onClickMenu = {
+                            nowCase = "menu"
                             scope.launch {
                                 delay(100L)
                                 drawerState.open()
@@ -188,7 +193,6 @@ private fun HomeContent(
                         )
                     }
                 }
-
             }
         }
     }

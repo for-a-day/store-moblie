@@ -92,7 +92,7 @@ fun BottomButton(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(id = text),
-                    style = NaganeTypography.h2,
+                    style = NaganeTypography.h1,
                     color = nagane_theme_main
                 )
             }

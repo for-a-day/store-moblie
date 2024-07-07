@@ -9,19 +9,25 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "Basket",
     indices = [Index(value = ["menuNo"], unique = true)])
 data class BasketEntity(
-    // 장바구니 번호(pk)
-    @ColumnInfo(name = "basketNo")
-    @PrimaryKey(autoGenerate = true)
-    var basketNo : Int,
     // 메뉴 번호(pk)
     @ColumnInfo(name = "menuNo")
     var menuNo : Long,
     // 메뉴 이름
     @ColumnInfo(name = "menuName")
     var menuName : String,
+    // 단품 기준 가격
+    @ColumnInfo(
+        name = "price")
+    var price : Int,
     // 메뉴 선택 수
     @ColumnInfo(
         name = "quantity",
         defaultValue = "1")
     var quantity : Int = 1,
-)
+)  {
+    // 장바구니 번호(pk)
+    @ColumnInfo(name = "basketNo")
+    @PrimaryKey(autoGenerate = true)
+    var basketNo: Long = 0
+}
+
