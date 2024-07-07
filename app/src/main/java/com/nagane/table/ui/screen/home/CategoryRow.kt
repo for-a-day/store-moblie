@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,7 +32,7 @@ fun CategoryRow(
     menuViewModel: MenuViewModel = viewModel()
 ) {
     val categories by menuViewModel.categories
-    var nowSelected by remember { mutableIntStateOf(0) }
+    var nowSelected by remember { mutableLongStateOf(0) }
 
     LazyRow(
         modifier = Modifier.padding(16.dp),
@@ -54,8 +55,8 @@ fun CategoryRow(
 @Composable
 fun CategoryButton(
     category: Category = Category(0, "전체보기"),
-    nowSelected: Int = 0,
-    onClick: (Int) -> Unit = {},
+    nowSelected: Long = 0,
+    onClick: (Long) -> Unit = {},
 ) {
     Button(
         modifier = Modifier
@@ -64,7 +65,7 @@ fun CategoryButton(
             onClick(category.categoryNo)
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (nowSelected == category.categoryNo) nagane_theme_main else Color.Transparent,
+            containerColor = if (nowSelected.toLong() == category.categoryNo) nagane_theme_main else Color.Transparent,
             contentColor = nagane_theme_light_0,
             disabledContainerColor = nagane_theme_light_8,
             disabledContentColor = nagane_theme_light_0
@@ -74,7 +75,7 @@ fun CategoryButton(
         Text(
             text = category.categoryName,
             style = NaganeTypography.h2,
-            color = if (nowSelected == category.categoryNo) nagane_theme_sub else nagane_theme_main
+            color = if (nowSelected.toLong() == category.categoryNo) nagane_theme_sub else nagane_theme_main
         )
     }
 }

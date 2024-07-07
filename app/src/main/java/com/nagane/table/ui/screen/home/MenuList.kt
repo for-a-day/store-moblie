@@ -54,7 +54,7 @@ import com.nagane.table.ui.theme.nagane_theme_main
 @Composable
 fun MenuList(
     menuViewModel: MenuViewModel = viewModel(),
-    onClick: (Int) -> Unit = {}
+    onClick: (Long) -> Unit = {}
 ) {
     val menus by menuViewModel.menus
 
@@ -69,10 +69,10 @@ fun MenuList(
             MenuBox(
                 menu = menu,
                 img = when(menu.menuNo) {
-                    1 -> R.drawable.cake_matcha
-                    21 -> R.drawable.cake_piece
-                    22 -> R.drawable.cake_hole
-                    23 -> R.drawable.cake_tea
+                    1L -> R.drawable.cake_matcha
+                    21L -> R.drawable.cake_piece
+                    22L -> R.drawable.cake_hole
+                    23L -> R.drawable.cake_tea
                     else -> R.drawable.macarong
                 },
                 onClick = onClick
@@ -106,7 +106,7 @@ fun MenuList(
 private fun MenuBox(
     menu: Menu,
     img: Int = R.drawable.cake_piece,
-    onClick: (Int) -> Unit = {}
+    onClick: (Long) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -220,10 +220,10 @@ fun MenuListPreview() {
             MenuBox(
                 menu = menu,
                 img = when(menu.menuNo) {
-                    1 -> R.drawable.cake_matcha
-                    21 -> R.drawable.cake_piece
-                    22 -> R.drawable.cake_hole
-                    23 -> R.drawable.cake_tea
+                    1L -> R.drawable.cake_matcha
+                    21L -> R.drawable.cake_piece
+                    22L -> R.drawable.cake_hole
+                    23L -> R.drawable.cake_tea
                     else -> R.drawable.macarong
                 }
             )

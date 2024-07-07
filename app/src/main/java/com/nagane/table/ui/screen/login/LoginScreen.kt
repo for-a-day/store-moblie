@@ -218,45 +218,6 @@ fun LoginTableOrder(
         )
 
         Button(
-//            onClick = {
-//                coroutineScope.launch {
-//                    loginTableApi(
-//                        tableCode.value.text,
-//                        storeCode.value.text,
-//                        tableNumber.value.text.toIntOrNull() ?: 0,
-//                        tableName.value.text
-//                    ) { response ->
-//                        if (response != null && response.statusCode == 200) {
-//                            // 데이터베이스 인스턴스 가져오기
-//                            val db = AppDatabase.getDatabase(context)
-//                            val storeTableDao = db.storeTableDao()
-//
-//                            // 데이터베이스에 저장
-//                            val storeTable = StoreTableEntity(
-//                                tableCode = tableCode.value.text,
-//                                storeCode = storeCode.value.text,
-//                                tableNumber = tableNumber.value.text.toIntOrNull() ?: 0,
-//                                tableName = tableName.value.text
-//                            )
-//
-//                            // 데이터 삽입
-//                            coroutineScope.launch {
-//                                storeTableDao.insert(storeTable)
-//                            }
-//
-//                            navController.navigate(Screens.Home.route) {
-//                                popUpTo(Screens.Login.route) { inclusive = true }
-//                            }
-//                        } else {
-//                            Toast.makeText(
-//                                context,
-//                                response?.message ?: "서버와의 연결에 실패했습니다.",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    }
-//                }
-//            },
             onClick = { onClick(
                 TableLogin(
                     tableCode.value.text,

@@ -28,13 +28,13 @@ interface NaganeAPI {
     @GET("/to/menuList")
     suspend fun getMenuList(
         @Query("storeCode") storeCode : String,
-        @Query("categoryNo") categoryNo : Int,
+        @Query("categoryNo") categoryNo : Long,
     ): ApiResponse<MenuData>
 
     // 메뉴 상세 정보 받아오기
     @GET("/to/menu")
     suspend fun getMenuDetail(
         @Query("storeCode") storeCode : String,
-        @Query("menuNo") menuNo : Int,
+        @Query("menuNo") menuNo : Long,
     ) : ApiResponse<Map<String, MenuDetail>>
 }

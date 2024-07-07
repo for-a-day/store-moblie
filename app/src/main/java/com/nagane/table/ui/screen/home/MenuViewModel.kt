@@ -24,7 +24,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
         "너무너무 진짜진짜 맛있는 주인장 추천 특선 케이크",
         32000,
         "string",
-        "아주 달콤하고, 아주 달콤하다. 혀를 녹여버릴 것 같은 단맛에 저항하다보면, 어느새 접시 위에 눈 녹듯 사라져 있는 환상의 디저트. 진짜 맛있다. 정말 맛있다. 점장 추천 메뉴. 진짜 너무 정말 맛있으니까 꼭 먹어주었으면 좋겠다. 두 번 먹어라.",
+        "아주 달콤하고, 아주 달콤하다. 혀를 녹여버릴 것 같은 단맛에 저항 하다보면, 어느새 접시 위에 눈 녹듯 사라져 있는 환상의 디저트. 진짜 맛있다. 정말 맛있다. 점장 추천 메뉴. 진짜 너무 정말 맛있으니까 꼭 먹어주었으면 좋겠다. 두 번 먹어라.",
         false))
     val menuDetail : State<MenuDetail> = _menuDetail
 
@@ -60,7 +60,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun fetchMenus(
-        categoryNo : Int
+        categoryNo : Long
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -81,7 +81,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun fetchMenuDetail(
-        menuNo: Int
+        menuNo: Long
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
