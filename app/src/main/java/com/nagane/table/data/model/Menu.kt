@@ -21,6 +21,3 @@ data class MenuDetail(
     val soldOut : Boolean
 )
 
-data class MenuDetailData(
-    val menu: MenuDetail
-)

@@ -21,7 +21,7 @@
     <string name="bottom_bill">주문내역</string>
     <string name="bottom_cart">장바구니</string>
 
-    <string name="disabled_order">해당 메뉴는 구매가 불가능합니다.</string>
+    <string name="disabled_order">해당 메뉴는 품절되었습니다.</string>
     <string name="price_title">가격</string>
     <string name="description_title">설명</string>
     <string name="close">닫기</string>
@@ -49,6 +49,10 @@
     <string name="pickup">포장하기</string>
 
     <string name="go_payment">결제하기</string>
+    <string name="payment_info_first">카드를 꽂아주세요.</string>
+    <string name="payment_info_second">결제 중입니다.\n잠시만 기다려주세요.</string>
+    <string name="payment_info_third">결제가 완료되었습니다.\n감사합니다.</string>
+    <string name="payment_info_forth"></string>
 
     <string name="admin_title">관리자 화면</string>
     <string name="result_error">오류가 발생했습니다.</string>

@@ -28,6 +28,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
         false))
     val menuDetail : State<MenuDetail> = _menuDetail
 
+
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("table_prefs", Context.MODE_PRIVATE)
     val tableNumber = sharedPreferences.getString("tableNumber", "-1")
@@ -93,7 +94,6 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
                 if (response != null) {
                     Log.d("API_INFO", "메뉴 상세 정보 가져오기 성공 : ${response.message}")
                     if (response.statusCode == 200) {
-                        Log.d("API_INFO", "메뉴 상세 정보 가져오기 성공 : ${response.data}")
                         val nowMenuDetail = response.data?.let {
                             it["menu"]?.let { menu ->
                                 MenuDetail(

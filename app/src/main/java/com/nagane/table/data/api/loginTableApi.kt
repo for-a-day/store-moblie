@@ -5,13 +5,13 @@ import retrofit2.Call
 
 private const val TAG = "ApiRequest"
 
-fun loginTableApi(
-    tableLogin: TableLogin,
-    onResult: (ApiResponse<Any>?) -> Unit
-) {
-    val call: Call<ApiResponse<Any>> = RetrofitClient.apiService.loginTable(tableLogin)
-    RetrofitClient.makeApiCall(call, onResult)
-}
+//fun loginTableApi(
+//    tableLogin: TableLogin,
+//    onResult: (ApiResponse<Any>?) -> Unit
+//) {
+//    val call: Call<ApiResponse<Any>> = RetrofitClient.apiService.loginTable(tableLogin)
+//    RetrofitClient.makeApiCall(call, onResult)
+//}
 
 /*
 *             try {

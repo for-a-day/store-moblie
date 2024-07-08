@@ -409,7 +409,9 @@ fun PaymentMethodCheck(
         // Spacer(modifier = Modifier.height(60.dp))
         OrderBottomButtonRow(
             paymentEnable = ((paymentCase == 1 || paymentCase == 2) && (dineCase == 1 || dineCase == 2)),
-            navController = navController
+            navController = navController,
+            paymentCase = paymentCase,
+            dineCase = dineCase
         )
     }
 }
@@ -417,8 +419,22 @@ fun PaymentMethodCheck(
 @Composable
 fun OrderBottomButtonRow(
     paymentEnable: Boolean = false,
-    navController: NavController
+    navController: NavController,
+    cartViewModel: CartViewModel = viewModel(),
+    paymentCase: Int,
+    dineCase: Int
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        PaymentDialog(
+            onDismiss = {
+                showDialog = false
+                navController.popBackStack()
+            }
+        )
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -451,7 +467,11 @@ fun OrderBottomButtonRow(
             textColor = if (paymentEnable) nagane_theme_main else nagane_theme_light_0.copy(alpha = 0.5f),
             onClick = {
                 if (paymentEnable) {
-
+                    showDialog = true
+                    cartViewModel.createOrder(
+                        paymentCase = paymentCase,
+                        dineCase = dineCase
+                    )
                 }
             }
         )

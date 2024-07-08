@@ -4,7 +4,8 @@ import com.nagane.table.data.model.Category
 import com.nagane.table.data.model.CategoryData
 import com.nagane.table.data.model.MenuData
 import com.nagane.table.data.model.MenuDetail
-import com.nagane.table.data.model.MenuDetailData
+import com.nagane.table.data.model.OrderCreateDto
+import com.nagane.table.data.model.OrderDetailDto
 import com.nagane.table.data.model.TableLogin
 import retrofit2.Call
 import retrofit2.http.Body
@@ -17,7 +18,7 @@ interface NaganeAPI {
     @POST("to")
     fun loginTable(
         @Body requestBody: TableLogin
-    ): Call<ApiResponse<Any>>
+    ): ApiResponse<Any>
 
     // 카테고리 정보 받아오기
     @GET("/to/category")
@@ -37,4 +38,10 @@ interface NaganeAPI {
         @Query("storeCode") storeCode : String,
         @Query("menuNo") menuNo : Long,
     ) : ApiResponse<Map<String, MenuDetail>>
+
+    // 주문 신규 등록
+    @POST("/to/order")
+    suspend fun createOrder(
+        @Body responseBody : OrderCreateDto
+    ): ApiResponse<OrderDetailDto>
 }
