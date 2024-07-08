@@ -4,6 +4,7 @@ data class Menu(
     val menuNo : Long,
     val menuName: String,
     val price : Int,
+    val imageByte: String,
     val soldOut : Boolean
 )
 
@@ -15,7 +16,7 @@ data class MenuDetail(
     val menuNo : Long,
     val menuName: String,
     val price : Int,
-    val menuImage: String,
+    val imageByte: String,
     val description: String,
     val soldOut : Boolean
 )

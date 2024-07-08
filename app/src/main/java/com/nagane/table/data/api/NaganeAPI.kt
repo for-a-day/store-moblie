@@ -25,7 +25,7 @@ interface NaganeAPI {
     ): ApiResponse<CategoryData>
 
     // 메뉴 리스트 받아오기
-    @GET("/to/menuList")
+    @GET("/to/menu/list")
     suspend fun getMenuList(
         @Query("storeCode") storeCode : String,
         @Query("categoryNo") categoryNo : Long,

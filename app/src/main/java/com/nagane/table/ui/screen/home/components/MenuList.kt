@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,16 +23,23 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,6 +51,11 @@ import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_7
 import com.nagane.table.ui.theme.nagane_theme_light_9
 import com.nagane.table.ui.theme.nagane_theme_main
+import com.nagane.table.ui.util.bitmapToImageBitmap
+import com.nagane.table.ui.util.convertImageByteArrayToBitmap
+import com.nagane.table.ui.util.decodeBase64ToByteArray
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -57,19 +70,12 @@ fun MenuList(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(64.dp),
         maxItemsInEachRow = 4
     ) {
         menus.forEach {  menu ->
             MenuBox(
                 menu = menu,
-                img = when(menu.menuNo) {
-                    1L -> R.drawable.cake_matcha
-                    21L -> R.drawable.cake_piece
-                    22L -> R.drawable.cake_hole
-                    23L -> R.drawable.cake_tea
-                    else -> R.drawable.macarong
-                },
                 onClick = onClick,
                 context = context
             )
@@ -81,7 +87,6 @@ fun MenuList(
 @Composable
 private fun MenuBox(
     menu: Menu,
-    img: Int = R.drawable.cake_piece,
     context: Context = LocalContext.current,
     onClick: (Long) -> Unit = {}
 ) {
@@ -94,11 +99,13 @@ private fun MenuBox(
                 if (!menu.soldOut) {
                     onClick(menu.menuNo)
                 } else {
-                    Toast.makeText(
-                        context,
-                        R.string.disabled_order,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast
+                        .makeText(
+                            context,
+                            R.string.disabled_order,
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
                 }
             }),
         colors = CardDefaults.cardColors(
@@ -112,7 +119,11 @@ private fun MenuBox(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MenuImage(img)
+            Spacer(modifier = Modifier.height(8.dp))
+            MenuImage(
+                imageData = menu.imageByte,
+                imageSize = 160.dp,
+                soldOut = menu.soldOut)
             Divider(
                 modifier = Modifier
                     .padding(
@@ -154,23 +165,6 @@ private fun MenuBox(
     }
 }
 
-@Preview
-@Composable
-private fun MenuImage(
-    img: Int = R.drawable.cake_piece,
-) {
-    Card(
-        modifier = Modifier.size(160.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        )
-    ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = img),
-            contentDescription = null)
-    }
-}
 
 @Preview
 @Composable
@@ -179,6 +173,7 @@ private fun MenuBoxPreview() {
         1,
         "마이쪄",
         1000,
+        "",
         false,
     ))
 }
@@ -189,11 +184,11 @@ private fun MenuBoxPreview() {
 @Composable
 fun MenuListPreview() {
     val dummyMenus = listOf(
-        Menu(menuNo = 1, menuName = "Chocolate Cake", price = 5000, soldOut = false),
-        Menu(menuNo = 21, menuName = "Vanilla Ice Cream", price = 3000, soldOut = true),
-        Menu(menuNo = 22, menuName = "Strawberry Shortcake", price = 4500, soldOut = false),
-        Menu(menuNo = 23, menuName = "Cheesecake", price = 4000, soldOut = true),
-        Menu(menuNo = 24, menuName = "Macaron", price = 2000, soldOut = false)
+        Menu(menuNo = 1, menuName = "Chocolate Cake", price = 5000, imageByte = "", soldOut = false),
+        Menu(menuNo = 21, menuName = "Vanilla Ice Cream", price = 3000, imageByte = "", soldOut = true),
+        Menu(menuNo = 22, menuName = "Strawberry Shortcake", price = 4500, imageByte = "", soldOut = false),
+        Menu(menuNo = 23, menuName = "Cheesecake", price = 4000, imageByte = "", soldOut = true),
+        Menu(menuNo = 24, menuName = "Macaron", price = 2000, imageByte = "", soldOut = false)
     )
 
     FlowRow(
@@ -206,13 +201,6 @@ fun MenuListPreview() {
         dummyMenus.forEach {  menu ->
             MenuBox(
                 menu = menu,
-                img = when(menu.menuNo) {
-                    1L -> R.drawable.cake_matcha
-                    21L -> R.drawable.cake_piece
-                    22L -> R.drawable.cake_hole
-                    23L -> R.drawable.cake_tea
-                    else -> R.drawable.macarong
-                }
             )
 
         }

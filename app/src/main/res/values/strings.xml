@@ -12,6 +12,8 @@
     <string name="table_name">테이블명</string>
     <string name="table_login_btn">기기 등록</string>
 
+    <string name="sold_out">SOLD OUT</string>
+
     <string name="admin_login_title">관리자 로그인을 위한 정보를 입력해주세요.</string>
     <string name="admin_login_btn">로그인</string>
 

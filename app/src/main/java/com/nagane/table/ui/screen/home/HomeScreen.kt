@@ -52,7 +52,7 @@ fun HomeScreen(
 {
 
     var nowCase by rememberSaveable {
-        mutableStateOf("menu")
+        mutableStateOf("cart")
     }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -94,7 +94,6 @@ fun HomeScreen(
                                 }
                             }
                         },
-
                         onClickMenu = {
                             nowCase = "menu"
                             scope.launch {
