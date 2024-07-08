@@ -1,6 +1,7 @@
 package com.nagane.table.ui.screen.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -21,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -31,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
+import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.home.components.CategoryRow
 import com.nagane.table.ui.screen.home.components.CustomBottomBar
 import com.nagane.table.ui.screen.home.components.CustomModalDrawerContent
@@ -54,6 +57,7 @@ fun HomeScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val drawerWidth = if (drawerState.isOpen) 480.dp else 0.dp
+    val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -70,7 +74,8 @@ fun HomeScreen(
                                 scope.launch {
                                     drawerState.close()
                                 }
-                            }
+                            },
+                            { navController.navigate(Screens.Order.route) }
                         )
                     }
                 },
@@ -89,13 +94,15 @@ fun HomeScreen(
                                 }
                             }
                         },
+
                         onClickMenu = {
                             nowCase = "menu"
                             scope.launch {
                                 delay(100L)
                                 drawerState.open()
                             }
-                        }
+                        },
+                        context = context
                     )
                 }
             }
@@ -111,7 +118,8 @@ private fun HomeContent(
     onClickGoCart: () -> Unit = {},
     menuViewModel: MenuViewModel = viewModel(),
     navController: NavController,
-    onClickMenu: () -> Unit = {}
+    onClickMenu: () -> Unit = {},
+    context: Context
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -158,9 +166,9 @@ private fun HomeContent(
                         MenuList(
                             onClick = { menuNo ->
                                 menuViewModel.fetchMenuDetail(menuNo)
-
                                 onClickMenu()
-                            }
+                            },
+                            context = context
                         )
                     }
                 }

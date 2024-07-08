@@ -30,10 +30,9 @@ import com.nagane.table.ui.theme.nagane_theme_main
 fun CustomModalDrawerContent(
     drawerWidth: Dp = 480.dp,
     nowCase: String = "menu",
-    closeDrawer: () -> Unit = {}
+    closeDrawer: () -> Unit = {},
+    onPaymentPage: () -> Unit = {}
 ) {
-
-
     ModalDrawerSheet(
         modifier = Modifier
             .fillMaxHeight()
@@ -42,7 +41,10 @@ fun CustomModalDrawerContent(
     ) {
         when(nowCase) {
             "menu" -> MenuDrawerContent(closeDrawer = closeDrawer)
-            else -> CartDrawerContent(closeDrawer = closeDrawer)
+            else -> CartDrawerContent(
+                closeDrawer = closeDrawer,
+                onPaymentPage = onPaymentPage
+            )
         }
 
     }

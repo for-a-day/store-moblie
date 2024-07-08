@@ -1,5 +1,8 @@
 package com.nagane.table.ui.screen.home.components
 
+import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,12 +30,15 @@ import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -50,8 +57,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nagane.table.R
 import com.nagane.table.data.model.Cart
+import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.home.CartViewModel
 import com.nagane.table.ui.theme.NaganeTypography
+import com.nagane.table.ui.theme.nagane_theme_light_4
 import com.nagane.table.ui.theme.nagane_theme_light_7
 import com.nagane.table.ui.theme.nagane_theme_light_9
 import com.nagane.table.ui.theme.nagane_theme_main
@@ -59,10 +68,12 @@ import com.nagane.table.ui.theme.nagane_theme_sub
 import kotlinx.coroutines.launch
 
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun CartDrawerContent(
     closeDrawer: () -> Unit = {},
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel(),
+    onPaymentPage: () -> Unit = {}
 ) {
     val carts by cartViewModel.cartItems
 
@@ -71,6 +82,9 @@ fun CartDrawerContent(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    LaunchedEffect(carts) {
+        nowTotalPrice = carts.sumOf { it.price * it.quantity }
+    }
 
     Box(
         modifier = Modifier
@@ -100,7 +114,7 @@ fun CartDrawerContent(
                     nowTotalPrice += price
                 }
             )
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(360.dp))
         }
 
         Column(
@@ -109,13 +123,10 @@ fun CartDrawerContent(
                 .wrapContentHeight()
                 .align(Alignment.BottomCenter)
         ) {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(24.dp)
-                .background(nagane_theme_main)
-            )
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(nagane_theme_main),
             ) {
                 Box(
                     modifier = Modifier
@@ -181,11 +192,19 @@ fun CartDrawerContent(
                     icon = Icons.Filled.AddCard,
                     text = R.string.go_charge,
                     onClick = {
-                        closeDrawer()
-                        scope.launch {
-                            scrollState.scrollTo(0)
+                        if (carts.isEmpty()) {
+                            Toast.makeText(
+                                context,
+                                R.string.empty_cart,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            closeDrawer()
+                            scope.launch {
+                                scrollState.scrollTo(0)
+                            }
+                            onPaymentPage()
                         }
-
                     }
                 )
 
@@ -231,12 +250,13 @@ fun CartList(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState),
+                .padding(32.dp)
             ) {
             FlowRow(
                 modifier = Modifier
-                    // .fillMaxSize()
-                    .weight(1f),
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(bottom = 120.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 maxItemsInEachRow = 1
             ) {
@@ -244,7 +264,8 @@ fun CartList(
                     CartBox(
                         cart,
                         onDelete = {
-                            cartViewModel.deleteCartMenu(cart.menuNo)
+                            Log.d("하하", "나 실행되긴 해 바보야!")
+                            cartViewModel.deleteCartMenu(cart.cartNo)
                         },
                         changeQuantity = { isIncre: Boolean ->
                             var changedQuantity = cart.quantity
@@ -271,106 +292,109 @@ fun CartList(
 @Composable
 private fun CartBox(
     cart: Cart,
-    onDelete: (Long) -> Unit = {},
-    changeQuantity: (Boolean) -> Unit = { isIncre: Boolean -> }
+    onDelete: () -> Unit = {},
+    changeQuantity: (Boolean) -> Unit = {}
 ) {
     var nowQuality by remember { mutableIntStateOf(cart.quantity) }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = nagane_theme_sub
-        ),
-        border = BorderStroke((1.5).dp, nagane_theme_main)
+    Box(
+        contentAlignment = Alignment.TopEnd,
     ) {
-        Column(
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            colors = CardDefaults.cardColors(
+                containerColor = nagane_theme_sub
+            ),
+            border = BorderStroke((1.5).dp, nagane_theme_main)
         ) {
-            Divider(
-                modifier = Modifier
-                    .padding(
-                        vertical = 16.dp,
-                    )
-                    .width(180.dp),
-                thickness = 2.dp,
-                color = nagane_theme_main.copy(alpha = 0.5f)
-            )
             Column(
                 modifier = Modifier
-                    .width(180.dp)
-                    .padding(horizontal = 16.dp)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceAround
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = cart.menuName,
-                    style = NaganeTypography.h1,
-                    fontSize = 24.sp,
-                    color = nagane_theme_light_9,
-                    textAlign = TextAlign.Center,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                Divider(
+                    modifier = Modifier
+                        .padding(
+                            vertical = 16.dp,
+                        )
+                        .width(180.dp),
+                    thickness = 4.dp,
+                    color = nagane_theme_main.copy(alpha = 0.5f)
                 )
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .width(180.dp)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround
                 ) {
                     Text(
-                        text = stringResource(id = R.string.menu_price),
-                        style = NaganeTypography.b,
-                        fontSize = 20.sp,
-                        color = nagane_theme_light_7,
+                        text = cart.menuName,
+                        style = NaganeTypography.h1,
+                        fontSize = 24.sp,
+                        color = nagane_theme_light_9,
                         textAlign = TextAlign.Center,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Text(
-                        text = "${cart.price}원",
-                        style = NaganeTypography.p,
-                        fontSize = 20.sp,
-                        color = nagane_theme_light_7,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.menu_price),
+                            style = NaganeTypography.b,
+                            fontSize = 20.sp,
+                            color = nagane_theme_light_7,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = "${cart.price}원",
+                            style = NaganeTypography.p,
+                            fontSize = 20.sp,
+                            color = nagane_theme_light_7,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        QuantityBlock(false, onClick = {
+                            changeQuantity(false)
+                            nowQuality -= 1
+                        }, cart.quantity)
+                        Text(
+                            text = "${nowQuality}개",
+                            style = NaganeTypography.h2,
+                            fontSize = 20.sp,
+                            color = nagane_theme_light_7,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        QuantityBlock(true, onClick = {
+                            changeQuantity(true)
+                            nowQuality += 1
+                        }, cart.quantity)
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    QuantityBlock(false, onClick = {
-                        changeQuantity(false)
-                        nowQuality -= 1
-                    })
-                    Text(
-                        text = "${nowQuality}개",
-                        style = NaganeTypography.h2,
-                        fontSize = 20.sp,
-                        color = nagane_theme_light_7,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    QuantityBlock(true, onClick = {
-                        changeQuantity(true)
-                        nowQuality += 1
-                    })
-                }
-                Spacer(modifier = Modifier.height(12.dp))
             }
         }
+        DeleteBtn(onClick = onDelete)
     }
 }
 
@@ -379,15 +403,26 @@ private fun CartBox(
 fun QuantityBlock(
     isIncre: Boolean = true,
     onClick: () -> Unit = {},
+    nowQuantity: Int = 0
 ) {
     Card(
-        modifier = Modifier.size(40.dp)
-            .clickable { onClick() }
+        modifier = Modifier
+            .size(40.dp)
+            .clickable(
+                onClick = onClick,
+                enabled = !(!isIncre && nowQuantity <= 1)
+            )
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(nagane_theme_main),
+                .background(
+                    if (!isIncre && nowQuantity <= 1) {
+                        nagane_theme_light_4
+                    } else {
+                        nagane_theme_main
+                    }
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -396,4 +431,23 @@ fun QuantityBlock(
                 tint = nagane_theme_sub)
         }
     }
+}
+
+@Composable
+fun DeleteBtn(
+    onClick: () -> Unit = {},
+) {
+    Icon(
+        modifier = Modifier
+            .offset(
+                x = (-36).dp,
+                y = 25.dp)
+            .size(32.dp)
+            .clickable(
+                onClick = onClick
+            ),
+        imageVector = Icons.Filled.RemoveCircle,
+        contentDescription = stringResource(id = R.string.remove_cart),
+        tint = nagane_theme_main
+    )
 }

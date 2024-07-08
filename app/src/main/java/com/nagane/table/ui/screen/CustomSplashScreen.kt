@@ -36,12 +36,6 @@ import com.nagane.table.ui.theme.nagane_theme_main
 import com.nagane.table.ui.theme.nagane_theme_sub
 import kotlinx.coroutines.delay
 
-
-suspend fun checkIfLoggedIn(): Boolean {
-    delay(1000)
-    return false
-}
-
 @Composable
 fun CustomSplashScreen(
     navController: NavHostController,

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.nagane.table.data.model.Cart
 
 // 장바구니 entity
     @Entity(tableName = "Cart",
@@ -29,5 +30,16 @@ data class CartEntity(
     @ColumnInfo(name = "cartNo")
     @PrimaryKey(autoGenerate = true)
     var cartNo: Long = 0
+}
+
+// 데이터 형식 변경
+fun CartEntity.toCart(): Cart {
+    return Cart(
+        cartNo = this.cartNo ?: 0,
+        menuNo = this.menuNo,
+        menuName = this.menuName,
+        quantity = this.quantity,
+        price = this.price
+    )
 }
 

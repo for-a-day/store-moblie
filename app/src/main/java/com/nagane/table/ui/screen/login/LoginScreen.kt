@@ -38,17 +38,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
-import com.nagane.table.data.entity.StoreTableEntity
 import com.nagane.table.data.model.TableLogin
-import com.nagane.table.data.table.AppDatabase
 import com.nagane.table.ui.main.Screens
-import com.nagane.table.ui.screen.checkIfLoggedIn
 import com.nagane.table.ui.screen.common.CustomOutlinedTextField
 import com.nagane.table.ui.screen.common.LoginInfo
 import com.nagane.table.ui.theme.NaganeTableTheme
@@ -56,9 +51,6 @@ import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_8
 import com.nagane.table.ui.theme.nagane_theme_main
-import com.nagane.table.ui.theme.nagane_theme_sub
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 
@@ -79,8 +71,7 @@ fun LoginScreen(
             true -> navController.navigate(Screens.Home.route) {
                 popUpTo(Screens.Login.route) { inclusive = true }
             }
-            false -> {}
-            null -> {}
+            else -> {}
         }
     }
 

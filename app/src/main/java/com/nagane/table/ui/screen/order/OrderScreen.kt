@@ -31,11 +31,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
 import com.nagane.table.ui.screen.common.BackButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
+import com.nagane.table.ui.screen.home.CartViewModel
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
@@ -45,6 +47,7 @@ import com.nagane.table.ui.theme.nagane_theme_sub
 @Composable
 fun OrderScreen(
     navController: NavController,
+    cartViewModel: CartViewModel = viewModel(),
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),

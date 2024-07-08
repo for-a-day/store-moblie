@@ -1,5 +1,7 @@
 package com.nagane.table.ui.screen.home.components
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -24,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,7 +48,8 @@ import com.nagane.table.ui.theme.nagane_theme_main
 @Composable
 fun MenuList(
     menuViewModel: MenuViewModel = viewModel(),
-    onClick: (Long) -> Unit = {}
+    onClick: (Long) -> Unit = {},
+    context: Context
 ) {
     val menus by menuViewModel.menus
 
@@ -66,37 +70,19 @@ fun MenuList(
                     23L -> R.drawable.cake_tea
                     else -> R.drawable.macarong
                 },
-                onClick = onClick
+                onClick = onClick,
+                context = context
             )
 
         }
     }
-//    LazyRow(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(vertical = 32.dp),
-//        contentPadding = PaddingValues(horizontal = 16.dp),
-//        horizontalArrangement = Arrangement.spacedBy(32.dp)
-//    ) {
-//        items(menus) { menu ->
-//            MenuBox(
-//                menu = menu,
-//                img = when(menu.menuNo) {
-//                    1 -> R.drawable.cake_matcha
-//                    2 -> R.drawable.cake_piece
-//                    3 -> R.drawable.cake_hole
-//                    4 -> R.drawable.cake_tea
-//                    else -> R.drawable.macarong
-//                }
-//            )
-//        }
-//    }
 }
 
 @Composable
 private fun MenuBox(
     menu: Menu,
     img: Int = R.drawable.cake_piece,
+    context: Context = LocalContext.current,
     onClick: (Long) -> Unit = {}
 ) {
     Card(
@@ -104,7 +90,17 @@ private fun MenuBox(
             .width(240.dp)
             .height(340.dp)
             .padding(vertical = 16.dp)
-            .clickable(onClick = { onClick(menu.menuNo) }),
+            .clickable(onClick = {
+                if (!menu.soldOut) {
+                    onClick(menu.menuNo)
+                } else {
+                    Toast.makeText(
+                        context,
+                        R.string.disabled_order,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }),
         colors = CardDefaults.cardColors(
             containerColor = nagane_theme_light_0
         ),
@@ -183,7 +179,7 @@ private fun MenuBoxPreview() {
         1,
         "마이쪄",
         1000,
-        false
+        false,
     ))
 }
 

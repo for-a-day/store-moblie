@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.nagane.table.data.dao.CartDao
 import com.nagane.table.data.entity.CartEntity
+import com.nagane.table.data.entity.toCart
 import com.nagane.table.data.model.Cart
 import com.nagane.table.data.model.CartCreateDto
 import com.nagane.table.data.table.AppDatabase
@@ -27,23 +28,12 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun loadCartItems() {
         try {
-            val cartEntity = cartDao.getCart()
+            val cartEntities : List<CartEntity> = cartDao.getCart()
 
-            if (cartEntity != null) {
-                _cartItems.value = listOf(
-                    Cart(
-                        cartNo = cartEntity.cartNo ?: 0,
-                        menuNo = cartEntity.menuNo,
-                        menuName = cartEntity.menuName,
-                        quantity = cartEntity.quantity,
-                        price = cartEntity.price
-                    )
-                )
-            } else {
-                _cartItems.value = emptyList()
-            }
+            _cartItems.value = cartEntities.map { it.toCart() }
+
         } catch (e : Exception) {
-
+            Log.e("loadCartItems", "장바구니 데이터 불러오는 중 문제 발생")
         }
     }
 
@@ -54,8 +44,9 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteCartMenu(cartNo: Long) {
+        Log.d("deleteCartMenu", "$cartNo 항목을 장바구니에서 삭제합니다")
         viewModelScope.launch {
-            cartDao.deleteByMenuNo(cartNo)
+            cartDao.deleteByCartNo(cartNo)
             loadCartItems()
         }
     }

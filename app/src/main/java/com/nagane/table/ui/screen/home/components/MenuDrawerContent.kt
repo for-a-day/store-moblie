@@ -179,7 +179,7 @@ fun MenuDrawerContent(
                                 price = menu.price
                             ),
                             onResult = { result ->
-                                val toastResult = if (result) "장바구니에 메뉴가 추가됐습니다." else "오류가 발생했습니다"
+                                val toastResult = if (result) R.string.add_cart_true else R.string.result_error
                                 Toast.makeText(
                                     context,
                                     toastResult,
