@@ -18,7 +18,7 @@ fun NaganeNavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Login.route
+        startDestination = Screens.Splash.route
     ) {
         homeRoute(navController)
         composable(Screens.Splash.route) { CustomSplashScreen(navController) }
