@@ -27,6 +27,8 @@
     <string name="close">닫기</string>
     <string name="add_cart">장바구니 담기</string>
 
+    <string name="cancel">취소</string>
+
     <string name="cart_title">장바구니</string>
     <string name="remove_cart">삭제하기</string>
     <string name="go_charge">결제하기</string>
@@ -38,9 +40,17 @@
     <string name="order_title">결제 확인</string>
     <string name="order_check_title">주문 상세 확인</string>
     <string name="payment_total_price">총 결제 예정 금액 : </string>
-    <string name="payment_method_select">결제 방법을 선택해주세요.</string>
+    <string name="payment_method_select">1. 결제 방법을 선택해주세요.</string>
+    <string name="eat_method_select">2. 먹고 가실 장소를 선택해주세요.</string>
+
+    <string name="payment_card">카드결제</string>
+    <string name="payment_cash">현금결제</string>
+    <string name="dine_in">먹고가기</string>
+    <string name="pickup">포장하기</string>
+
+    <string name="go_payment">결제하기</string>
 
     <string name="admin_title">관리자 화면</string>
-    <string name="result_error">오류가 발생했습니다</string>
+    <string name="result_error">오류가 발생했습니다.</string>
 
 </resources>

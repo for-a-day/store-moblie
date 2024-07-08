@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdfScanner
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,7 +55,9 @@ fun CustomModalDrawerContent(
 @Composable
 fun DrawerContentButton(
     icon : ImageVector = Icons.Filled.AdfScanner,
+    iconColor: Color = LocalContentColor.current,
     text : Int = R.string.bottom_bill,
+    textColor : Color = nagane_theme_main,
     onClick : () -> Unit = {},
     @SuppressLint("ModifierParameter") modifier : Modifier = Modifier,
 ) {
@@ -65,12 +69,13 @@ fun DrawerContentButton(
         horizontalArrangement = Arrangement.Center
     ) {
         Icon(imageVector = icon,
-            contentDescription = null)
+            contentDescription = null,
+            tint = iconColor)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(id = text),
             style = NaganeTypography.h1,
-            color = nagane_theme_main
+            color = textColor
         )
     }
 }
