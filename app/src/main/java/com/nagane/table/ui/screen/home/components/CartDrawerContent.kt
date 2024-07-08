@@ -296,6 +296,7 @@ private fun CartBox(
     changeQuantity: (Boolean) -> Unit = {}
 ) {
     var nowQuality by remember { mutableIntStateOf(cart.quantity) }
+
     Box(
         contentAlignment = Alignment.TopEnd,
     ) {

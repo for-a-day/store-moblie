@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -22,11 +26,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +47,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
+import com.nagane.table.data.model.Cart
 import com.nagane.table.ui.screen.common.BackButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
 import com.nagane.table.ui.screen.home.CartViewModel
@@ -43,12 +56,27 @@ import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_main
 import com.nagane.table.ui.theme.nagane_theme_sub
+import kotlinx.coroutines.launch
 
 @Composable
 fun OrderScreen(
     navController: NavController,
     cartViewModel: CartViewModel = viewModel(),
 ) {
+    val carts by cartViewModel.cartItems
+    var totalPrice by remember { mutableIntStateOf(carts.sumOf { it.price * it.quantity }) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            cartViewModel.fetchCartItems()
+        }
+    }
+
+    LaunchedEffect(carts) {
+        totalPrice = carts.sumOf { it.price * it.quantity }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -80,7 +108,10 @@ fun OrderScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                OrderContainer()
+                OrderContainer(
+                    carts = carts,
+                    totalPrice = totalPrice
+                )
                 Spacer(modifier = Modifier.width(64.dp))
                 PaymentMethodCheck(
                     modifier = Modifier
@@ -92,7 +123,14 @@ fun OrderScreen(
 }
 
 @Composable
-fun OrderContainer() {
+fun OrderContainer(
+    totalPrice : Int = 0,
+    carts: List<Cart>,
+) {
+    val scrollState = rememberScrollState()
+
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .fillMaxHeight()
@@ -112,7 +150,7 @@ fun OrderContainer() {
                 contentDescription = null,
                 alpha = 0.3f
             )
-            OrderContent()
+            OrderContent(carts)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -120,7 +158,9 @@ fun OrderContainer() {
                     .background(nagane_theme_sub)
                     .align(Alignment.BottomCenter),
             ) {
-                TotalPriceBox()
+                TotalPriceBox(
+                    totalPrice = totalPrice
+                )
             }
         }
     }
@@ -128,7 +168,7 @@ fun OrderContainer() {
 
 @Composable
 fun OrderContent(
-
+    carts : List<Cart>,
 ) {
     Column(
         modifier = Modifier
@@ -139,6 +179,61 @@ fun OrderContent(
            text = stringResource(id = R.string.order_check_title),
             style = NaganeTypography.h1,
             fontSize = 32.sp,
+            color = nagane_theme_sub
+        )
+        LazyColumn(
+            modifier = Modifier
+                .padding(top = 20.dp, bottom = 80.dp)
+        ) {
+            items(carts) { cart ->
+                OrderBox(cart = cart)
+            }
+        }
+        // Spacer(modifier = Modifier.height(360.dp))
+    }
+}
+
+@Composable
+fun OrderBox(
+    cart : Cart
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(16.dp)
+    ) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = cart.menuName,
+                style = NaganeTypography.h2,
+                color = nagane_theme_sub,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "${cart.quantity} 개",
+                style = NaganeTypography.h2,
+                color = nagane_theme_sub,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "${cart.price}원",
+                style = NaganeTypography.h2,
+                color = nagane_theme_sub,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Divider(
+            modifier = Modifier
+                .padding(vertical = 16.dp),
+            thickness = 2.dp,
             color = nagane_theme_sub
         )
     }
@@ -169,46 +264,28 @@ fun PaymentMethodCheck(
 }
 
 @Composable
-fun TotalPriceBox() {
+fun TotalPriceBox(
+    totalPrice : Int = 0
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(32.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Box(
-            modifier = Modifier
-                .width(160.dp)
-                .weight(0.75f)
-                .background(Color.Transparent),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(id = R.string.payment_total_price),
-                style = NaganeTypography.h1,
-                fontSize = 28.sp,
-                color = nagane_theme_main
-            )
-        }
-//        Box(
-//            modifier = Modifier
-//                .height(80.dp)
-//                .width(2.dp)
-//                .background(nagane_theme_main)
-//        )
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .height(80.dp)
-                .background(Color.Transparent),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "어쩌구저쩌구 원",
-                style = NaganeTypography.h1,
-                fontSize = 28.sp,
-                color = nagane_theme_main
-            )
-        }
+        Text(
+            text = stringResource(id = R.string.payment_total_price),
+            style = NaganeTypography.h1,
+            fontSize = 28.sp,
+            color = nagane_theme_main
+        )
+        Text(
+            text = "$totalPrice 원",
+            style = NaganeTypography.h1,
+            fontSize = 28.sp,
+            color = nagane_theme_main
+        )
     }
 }
 
@@ -230,7 +307,7 @@ fun MethodBox() {
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            OrderContent()
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -238,7 +315,7 @@ fun MethodBox() {
                     .background(nagane_theme_sub)
                     .align(Alignment.BottomCenter),
             ) {
-                TotalPriceBox()
+
             }
         }
     }
