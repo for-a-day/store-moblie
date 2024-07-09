@@ -49,5 +49,5 @@ interface NaganeAPI {
     @GET("/to/order")
     suspend fun getOrderList(
         @Query("tableCode") tableCode : String,
-    ) : Call<ApiResponse<OrderList>>
+    ) : ApiResponse<OrderList>
 }

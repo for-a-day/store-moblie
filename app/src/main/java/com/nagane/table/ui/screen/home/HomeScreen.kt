@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -47,7 +48,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavController,
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel(),
+    menuViewModel: MenuViewModel = viewModel(),
 )
 {
 
@@ -75,7 +77,9 @@ fun HomeScreen(
                                     drawerState.close()
                                 }
                             },
-                            { navController.navigate(Screens.Order.route) }
+                            { navController.navigate(Screens.Order.route) },
+                            cartViewModel,
+                            menuViewModel
                         )
                     }
                 },
@@ -101,7 +105,8 @@ fun HomeScreen(
                                 drawerState.open()
                             }
                         },
-                        context = context
+                        context = context,
+                        menuViewModel = menuViewModel
                     )
                 }
             }
@@ -147,7 +152,7 @@ private fun HomeContent(
                     .fillMaxSize()
                     .padding(horizontal = 64.dp)
             ) {
-                CategoryRow()
+                CategoryRow(menuViewModel)
 
                 Box(modifier = Modifier
                     .fillMaxSize(),
@@ -163,6 +168,7 @@ private fun HomeContent(
                             .fillMaxSize()
                     ) {
                         MenuList(
+                            menuViewModel = menuViewModel,
                             onClick = { menuNo ->
                                 menuViewModel.fetchMenuDetail(menuNo)
                                 onClickMenu()

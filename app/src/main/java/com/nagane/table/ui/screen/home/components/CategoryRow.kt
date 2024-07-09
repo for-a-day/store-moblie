@@ -30,7 +30,7 @@ import com.nagane.table.ui.theme.nagane_theme_sub
 
 @Composable
 fun CategoryRow(
-    menuViewModel: MenuViewModel = viewModel()
+    menuViewModel: MenuViewModel = viewModel(),
 ) {
     val categories by menuViewModel.categories
     var nowSelected by remember { mutableStateOf(0L) }

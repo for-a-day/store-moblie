@@ -22,7 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nagane.table.R
+import com.nagane.table.ui.screen.home.CartViewModel
+import com.nagane.table.ui.screen.home.MenuViewModel
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_main
 
@@ -33,7 +36,9 @@ fun CustomModalDrawerContent(
     drawerWidth: Dp = 480.dp,
     nowCase: String = "menu",
     closeDrawer: () -> Unit = {},
-    onPaymentPage: () -> Unit = {}
+    onPaymentPage: () -> Unit = {},
+    cartViewModel: CartViewModel = viewModel(),
+    menuViewModel: MenuViewModel = viewModel(),
 ) {
     ModalDrawerSheet(
         modifier = Modifier
@@ -42,10 +47,15 @@ fun CustomModalDrawerContent(
         drawerContainerColor = nagane_theme_main,
     ) {
         when(nowCase) {
-            "menu" -> MenuDrawerContent(closeDrawer = closeDrawer)
+            "menu" -> MenuDrawerContent(
+                            menuViewModel = menuViewModel,
+                            closeDrawer = closeDrawer,
+                            cartViewModel = cartViewModel
+                        )
             else -> CartDrawerContent(
                 closeDrawer = closeDrawer,
-                onPaymentPage = onPaymentPage
+                onPaymentPage = onPaymentPage,
+                cartViewModel = cartViewModel
             )
         }
 

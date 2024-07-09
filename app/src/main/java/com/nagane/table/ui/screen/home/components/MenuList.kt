@@ -23,16 +23,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -51,11 +44,7 @@ import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_7
 import com.nagane.table.ui.theme.nagane_theme_light_9
 import com.nagane.table.ui.theme.nagane_theme_main
-import com.nagane.table.ui.util.bitmapToImageBitmap
-import com.nagane.table.ui.util.convertImageByteArrayToBitmap
-import com.nagane.table.ui.util.decodeBase64ToByteArray
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
