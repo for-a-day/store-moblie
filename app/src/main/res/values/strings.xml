@@ -60,6 +60,7 @@
     <string name="order_list">주문목록</string>
 
     <string name="admin_title">관리자 화면</string>
+    <string name="admin_fake_title">관리자 화면...인 줄 알았지?</string>
     <string name="result_error">오류가 발생했습니다.</string>
 
 </resources>
