@@ -10,7 +10,7 @@ sealed class Screens(val route: String) {
         data object OrderResult : Screens("orderResult")
     }
 
-    data object Bill : Screens("bill/{orderNo}")
+    data object Bill : Screens("bill")
 
     data object Admin : Screens("admin") {
         data object AdminLogin : Screens("login")

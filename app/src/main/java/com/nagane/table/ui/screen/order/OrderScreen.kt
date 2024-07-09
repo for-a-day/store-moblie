@@ -65,6 +65,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
 import com.nagane.table.data.model.Cart
 import com.nagane.table.data.model.CartCreateDto
+import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.common.BackButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
 import com.nagane.table.ui.screen.home.CartViewModel
@@ -101,14 +102,6 @@ fun OrderScreen(
         topBar = {
             CustomAppBarUI(
                 title = stringResource(id = R.string.order_title),
-                leftButton = {
-                    BackButton(
-                        onClick = {
-                            navController.popBackStack()
-                        },
-                        tint = nagane_theme_main
-                    )
-                },
                 backgroundColor = nagane_theme_sub,
                 subColor = nagane_theme_main
             )
@@ -147,10 +140,6 @@ fun OrderContainer(
     totalPrice : Int = 0,
     carts: List<Cart>,
 ) {
-    val scrollState = rememberScrollState()
-
-    val context = LocalContext.current
-
     Card(
         modifier = Modifier
             .fillMaxHeight()
@@ -291,7 +280,7 @@ fun PaymentMethodCheck(
     navController : NavController
 ) {
     var paymentCase by rememberSaveable {
-        mutableIntStateOf(0)
+        mutableIntStateOf(1)
     }
     var dineCase by rememberSaveable {
         mutableIntStateOf(0)
@@ -334,11 +323,7 @@ fun PaymentMethodCheck(
                     text = R.string.payment_card,
                     isSelected = (paymentCase == 1),
                     onClick = {
-                        paymentCase = if (paymentCase == 1) {
-                            0
-                        } else {
-                            1
-                        }
+                        paymentCase = 1
                     }
                 )
                 MethodBox(
@@ -385,11 +370,7 @@ fun PaymentMethodCheck(
                     text = R.string.dine_in,
                     isSelected = (dineCase == 1),
                     onClick = {
-                        dineCase = if (dineCase == 1) {
-                            0
-                        } else {
-                            1
-                        }
+                        dineCase = 1
                     }
                 )
                 MethodBox(
@@ -397,11 +378,7 @@ fun PaymentMethodCheck(
                     text = R.string.pickup,
                     isSelected = (dineCase == 2),
                     onClick = {
-                        dineCase = if (dineCase == 2) {
-                            0
-                        } else {
-                            2
-                        }
+                        dineCase = 2
                     }
                 )
             }
@@ -431,7 +408,9 @@ fun OrderBottomButtonRow(
         PaymentDialog(
             onDismiss = {
                 showDialog = false
-                navController.popBackStack()
+                navController.navigate(Screens.Home.route) {
+                    popUpTo(Screens.Order.route) { inclusive = true }
+                }
             }
         )
     }
@@ -499,10 +478,10 @@ fun MethodBox(
             containerColor = Color.Transparent
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isSelected) 8.dp else 0.dp
+            defaultElevation = if (isSelected || isDisabled) 8.dp else 0.dp
         ),
         border = BorderStroke((2).dp,
-            if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
+            if (isDisabled) nagane_theme_light_6.copy(alpha = 0.75f)
             else if (isSelected) nagane_theme_main
             else nagane_theme_sub)
     ) {

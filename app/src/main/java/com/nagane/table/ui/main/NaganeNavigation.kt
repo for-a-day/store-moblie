@@ -9,6 +9,7 @@ import com.nagane.table.ui.screen.CustomSplashScreen
 import com.nagane.table.ui.screen.admin.AdminScreen
 import com.nagane.table.ui.screen.home.homeRoute
 import com.nagane.table.ui.screen.login.LoginScreen
+import com.nagane.table.ui.screen.order.BillScreen
 import com.nagane.table.ui.screen.order.OrderScreen
 
 @Composable
@@ -25,5 +26,6 @@ fun NaganeNavigationGraph(
         composable(Screens.Login.route) { LoginScreen(navController) }
         composable(Screens.Admin.route) { AdminScreen(navController) }
         composable(Screens.Order.route) { OrderScreen(navController) }
+        composable(Screens.Bill.route) { BillScreen(navController) }
     }
 }
