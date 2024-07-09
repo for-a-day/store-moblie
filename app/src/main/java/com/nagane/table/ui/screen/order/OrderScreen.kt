@@ -346,12 +346,13 @@ fun PaymentMethodCheck(
                     text = R.string.payment_cash,
                     isSelected = (paymentCase == 2),
                     onClick = {
-                        paymentCase = if (paymentCase == 2) {
-                            0
-                        } else {
-                            2
-                        }
-                    }
+//                        paymentCase = if (paymentCase == 2) {
+//                            0
+//                        } else {
+//                            2
+//                        }
+                    },
+                    isDisabled = true
                 )
             }
         }
@@ -485,6 +486,7 @@ fun OrderBottomButtonRow(
 fun MethodBox(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
+    isDisabled: Boolean = false,
     icon: ImageVector = Icons.Filled.CreditCard,
     text: Int = R.string.payment_card,
     onClick: () -> Unit = {}
@@ -500,7 +502,9 @@ fun MethodBox(
             defaultElevation = if (isSelected) 8.dp else 0.dp
         ),
         border = BorderStroke((2).dp,
-            if (isSelected) nagane_theme_main else nagane_theme_sub)
+            if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
+            else if (isSelected) nagane_theme_main
+            else nagane_theme_sub)
     ) {
         Box(
             modifier = Modifier
@@ -510,7 +514,9 @@ fun MethodBox(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(if (isSelected) nagane_theme_sub else nagane_theme_main),
+                    .background(if (isDisabled) nagane_theme_light_6.copy(alpha = 0.75f)
+                    else if (isSelected) nagane_theme_sub
+                    else nagane_theme_main),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -521,12 +527,16 @@ fun MethodBox(
                         )
                         .width(80.dp),
                     thickness = 4.dp,
-                    color = if (isSelected) nagane_theme_main else nagane_theme_sub,
+                    color = if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
+                    else if (isSelected) nagane_theme_main
+                    else nagane_theme_sub,
                 )
                 Icon(
                     icon,
                     contentDescription = stringResource(id = text),
-                    tint = if (isSelected) nagane_theme_main else nagane_theme_sub,
+                    tint = if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
+                    else if (isSelected) nagane_theme_main
+                    else nagane_theme_sub,
                     modifier = Modifier.size(44.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -534,7 +544,9 @@ fun MethodBox(
                     text = stringResource(id = text),
                     style = NaganeTypography.h2,
                     fontSize = 26.sp,
-                    color = if (isSelected) nagane_theme_main else nagane_theme_sub,
+                    color = if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
+                    else if (isSelected) nagane_theme_main
+                    else nagane_theme_sub,
                 )
             }
         }

@@ -33,17 +33,23 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun loginTable(tableLogin: TableLogin, onResult: (ApiResponse<Any>) -> Unit) {
         viewModelScope.launch {
             try {
-                // API 호출 후 응답 처리
-                val response = RetrofitClient.apiService.loginTable(tableLogin)
-                if (response != null) {
-                    // 성공적인 경우 데이터 저장 등의 처리
-                    sharedPreferences.edit().putString("jwt_token", "임시 토큰").apply()
-                    sharedPreferences.edit().putString("tableCode", tableLogin.tableCode).apply()
-                    sharedPreferences.edit().putString("storeCode", tableLogin.storeCode).apply()
-                    sharedPreferences.edit().putString("tableNumber", tableLogin.tableNumber.toString()).apply()
-                    sharedPreferences.edit().putString("tableName", tableLogin.tableName).apply()
+                // RetrofitClient를 사용하여 API 호출
+                RetrofitClient.makeApiCall(RetrofitClient.apiService.loginTable(tableLogin)) { response ->
+                    if (response != null) {
+                        // 성공적인 경우 데이터 저장 등의 처리
+                        sharedPreferences.edit().apply {
+                            putString("jwt_token", "임시 토큰")
+                            putString("tableCode", tableLogin.tableCode)
+                            putString("storeCode", tableLogin.storeCode)
+                            putString("tableNumber", tableLogin.tableNumber.toString())
+                            putString("tableName", tableLogin.tableName)
+                            apply()
+                        }
+                        onResult(response)
+                    } else {
+                        onResult(ApiResponse(statusCode = 404, message = "테이블 코드나 가맹점 코드를 확인해주세요."))
+                    }
                 }
-                onResult(response)
             } catch (e: Exception) {
                 // 예외 발생 시 처리
                 onResult(ApiResponse(statusCode = 500, message = "서버와의 통신에 실패했습니다."))
@@ -54,6 +60,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 //    // Coroutine에서 context를 안전하게 사용하기 위해 withContext 사용
 //    private suspend fun loginTableApi(tableLogin: TableLogin): ApiResponse<Any>? {
 //        return withContext(Dispatchers.IO) {
+//
 //            ApiResponse(statusCode = 200, message = "로그인 성공", data = null)
 //        }
 //    }

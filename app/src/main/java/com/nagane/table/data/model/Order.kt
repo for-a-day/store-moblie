@@ -2,6 +2,11 @@ package com.nagane.table.data.model
 
 import java.time.LocalDateTime
 
+data class OrderMenuDto(
+    val menuNo: Long,
+    val menuName: String,
+    val quantity: Int,
+)
 
 data class OrderCreateDto(
     val amount: Int,
@@ -12,17 +17,15 @@ data class OrderCreateDto(
     val orderMenuList: List<OrderMenuDto>,
 )
 
-data class OrderMenuDto(
-    val menuNo: Long,
-    val menuName: String,
-    val quality: Int,
-)
-
 data class OrderMenuCreateList(
     val orderMenuList: List<OrderMenuDto>
 )
 
-data class OrderDetailDto(
+data class OrderList(
+    val orderList : List<Order>
+)
+
+data class Order(
     val orderNo: Long,
     val amount: Int,
     val orderDate: LocalDateTime,

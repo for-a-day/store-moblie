@@ -18,6 +18,7 @@ import com.nagane.table.data.model.OrderCreateDto
 import com.nagane.table.data.model.OrderMenuDto
 import com.nagane.table.data.table.AppDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CartViewModel(application: Application) : AndroidViewModel(application) {
@@ -122,9 +123,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
             OrderMenuDto(
                 menuNo = cart.menuNo,
                 menuName = cart.menuName,
-                quality = cart.quantity
+                quantity = cart.quantity
             )
         }
+
         if (tableCode != null && storeCode != null) {
             val orderCreateDto = OrderCreateDto(
                 amount = cartItems.value.sumOf { it.price * it.quantity },
@@ -141,13 +143,14 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                 orderMenuList = orderMenuCreateList
             )
 
-            Log.e("createOrder", "$orderCreateDto")
+            Log.d("createOrder", "$orderCreateDto")
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     val response = RetrofitClient.apiService.createOrder(orderCreateDto)
                     if (response != null) {
                         Log.d("API_INFO", "주문 성공 : ${response.message}")
                     }
+                    delay(6000L)
                     deleteCartAllMenu()
                 } catch (e: Exception) {
                     Log.e("API_ERROR", "주문 실패 : ${e.message}")
