@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun PaymentDialog(
-    onDismiss: () -> Unit) {
+    onDismiss: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     var dialogMessage by remember { mutableStateOf(R.string.payment_info_first) }
     var showProgressBar by remember { mutableStateOf(false) }

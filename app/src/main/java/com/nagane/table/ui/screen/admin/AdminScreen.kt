@@ -1,5 +1,6 @@
 package com.nagane.table.ui.screen.admin
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +20,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -31,13 +34,18 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
+import com.nagane.table.data.model.TableAdminLogin
+import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.common.BackButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
 import com.nagane.table.ui.screen.common.CustomOutlinedTextField
 import com.nagane.table.ui.screen.common.LoginInfo
+import com.nagane.table.ui.screen.login.LoginViewModel
+import com.nagane.table.ui.screen.order.PaymentDialog
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
@@ -48,7 +56,10 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun AdminScreen(navController: NavController) {
+fun AdminScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel()
+) {
 
     Scaffold(
         modifier = Modifier
@@ -82,7 +93,8 @@ fun AdminScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp),
-                navController = navController
+                navController = navController,
+                loginViewModel = loginViewModel,
             )
 
         }
@@ -95,6 +107,7 @@ fun LoginAdmin(
     navController: NavController,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
 
     val tableCode = remember { mutableStateOf(TextFieldValue("")) }
@@ -107,6 +120,18 @@ fun LoginAdmin(
     val allFieldsFilled = tableCode.value.text.isNotEmpty() &&
             storeCode.value.text.isNotEmpty()
 
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        ConfirmDialog(
+            onDismiss = {
+                showDialog = false
+//                navController.navigate(Screens.Home.route) {
+//                    popUpTo(Screens.Order.route) { inclusive = true }
+//                }
+            }
+        )
+    }
 
     Column(
         modifier = modifier
@@ -149,9 +174,20 @@ fun LoginAdmin(
 
         Button(
             onClick = {
-                coroutineScope.launch {
-
-                }
+                loginViewModel.loginAdmin(
+                    TableAdminLogin(tableCode = tableCode.value.text, storeCode = storeCode.value.text),
+                    onResult = { response ->
+                        if (response.statusCode == 200) {
+                            showDialog = true
+                        } else {
+                            Toast.makeText(
+                                context,
+                                response.message ?: "서버와의 통신이 불가능합니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                )
             },
             modifier = Modifier
                 .padding(16.dp)
