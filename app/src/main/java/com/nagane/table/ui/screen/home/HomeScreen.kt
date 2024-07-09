@@ -98,6 +98,9 @@ fun HomeScreen(
                                 }
                             }
                         },
+                        onClickBill = {
+                            navController.navigate(Screens.Bill.route)
+                        },
                         onClickMenu = {
                             nowCase = "menu"
                             scope.launch {

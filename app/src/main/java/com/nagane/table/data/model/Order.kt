@@ -8,6 +8,13 @@ data class OrderMenuDto(
     val quantity: Int,
 )
 
+data class OrderMenuResponseDto(
+    val menuNo: Long,
+    val menuName: String,
+    val quantity: Int,
+    val price: Int,
+)
+
 data class OrderCreateDto(
     val amount: Int,
     val paymentMethod: String,
@@ -18,7 +25,7 @@ data class OrderCreateDto(
 )
 
 data class OrderMenuCreateList(
-    val orderMenuList: List<OrderMenuDto>
+    val orderMenuDetailList: List<OrderMenuDto>
 )
 
 data class OrderList(
@@ -28,11 +35,24 @@ data class OrderList(
 data class Order(
     val orderNo: Long,
     val amount: Int,
-    val orderDate: LocalDateTime,
+    val orderDate: String,
     val state : Int,
     val paymentMethod: String,
-    val updateDate : LocalDateTime,
+    val updatedDate : String,
     val tableNo: Int,
     val tableNumber: Int,
     val orderMenuList: List<OrderMenuDto>
+)
+
+data class OrderResponseList(
+    val orderList : List<OrderResponseDto>
+)
+
+data class OrderResponseDto(
+    val orderNo: Long,
+    val amount: Int,
+    val orderDate: String,
+    val paymentMethod: String,
+    val tableNumber: Int,
+    val orderMenuDetailList: List<OrderMenuResponseDto>
 )

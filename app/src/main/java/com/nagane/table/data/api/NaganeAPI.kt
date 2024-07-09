@@ -6,6 +6,7 @@ import com.nagane.table.data.model.MenuDetail
 import com.nagane.table.data.model.Order
 import com.nagane.table.data.model.OrderCreateDto
 import com.nagane.table.data.model.OrderList
+import com.nagane.table.data.model.OrderResponseList
 import com.nagane.table.data.model.TableLogin
 import retrofit2.Call
 import retrofit2.http.Body
@@ -49,5 +50,5 @@ interface NaganeAPI {
     @GET("/to/order")
     suspend fun getOrderList(
         @Query("tableCode") tableCode : String,
-    ) : ApiResponse<OrderList>
+    ) : ApiResponse<OrderResponseList>
 }

@@ -264,7 +264,6 @@ fun CartList(
                     CartBox(
                         cart,
                         onDelete = {
-                            Log.d("하하", "나 실행되긴 해 바보야!")
                             cartViewModel.deleteCartMenu(cart.cartNo)
                         },
                         changeQuantity = { isIncre: Boolean ->

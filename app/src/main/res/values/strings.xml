@@ -37,6 +37,9 @@
     <string name="empty_cart">장바구니에 담은 항목이 없습니다.</string>
     <string name="add_cart_true">장바구니에 메뉴가 추가됐습니다.</string>
 
+    <string name="order_yet">주문한 항목이 없습니다.</string>
+    <string name="total_price_check">총 가격</string>
+
     <string name="order_title">결제 확인</string>
     <string name="order_check_title">주문 상세 확인</string>
     <string name="payment_total_price">총 결제 예정 금액 : </string>
@@ -53,6 +56,8 @@
     <string name="payment_info_second">결제 중입니다.\n잠시만 기다려주세요.</string>
     <string name="payment_info_third">결제가 완료되었습니다.\n감사합니다.</string>
     <string name="payment_info_forth"></string>
+
+    <string name="order_list">주문목록</string>
 
     <string name="admin_title">관리자 화면</string>
     <string name="result_error">오류가 발생했습니다.</string>

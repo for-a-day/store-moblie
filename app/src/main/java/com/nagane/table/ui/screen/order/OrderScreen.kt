@@ -20,10 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.AdfScanner
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Dining
@@ -219,30 +216,46 @@ fun OrderBox(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Row(
+                modifier = Modifier
+                    .width(120.dp)
+                    .wrapContentHeight(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = cart.menuName,
+                    style = NaganeTypography.h2,
+                    color = nagane_theme_sub,
+                    fontSize = 22.sp,
+                )
+            }
             Text(
-                text = cart.menuName,
+                text = "${cart.price}",
                 style = NaganeTypography.h2,
-                color = nagane_theme_sub,
+                color = nagane_theme_sub.copy(alpha = 0.9f),
+                fontSize = 20.sp,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = "${cart.quantity} 개",
                 style = NaganeTypography.h2,
-                color = nagane_theme_sub,
+                color = nagane_theme_sub.copy(alpha = 0.9f),
+                fontSize = 20.sp,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "${cart.price}원",
+                text = "${cart.price * cart.quantity}원",
                 style = NaganeTypography.h2,
                 color = nagane_theme_sub,
+                fontSize = 22.sp,
                 overflow = TextOverflow.Ellipsis
             )
         }
         Divider(
             modifier = Modifier
-                .padding(vertical = 16.dp),
+                .padding(start = 8.dp, end = 8.dp, top = 24.dp),
             thickness = 2.dp,
-            color = nagane_theme_sub
+            color = nagane_theme_sub.copy(alpha = 0.8f)
         )
     }
 }
