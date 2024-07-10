@@ -10,6 +10,7 @@ import com.nagane.table.data.model.TableAdminLogin
 import com.nagane.table.data.model.TableCode
 import com.nagane.table.data.model.TableLogin
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -19,9 +20,9 @@ import retrofit2.http.Query
 interface NaganeAPI {
     // 테이블 기기 등록
     @POST("to")
-    fun loginTable(
+    suspend fun loginTable(
         @Body requestBody: TableLogin
-    ): Call<ApiResponse<Any>>
+    ): Response<ApiResponse<Any>>
 
     // 카테고리 정보 받아오기
     @GET("/to/category")
@@ -58,12 +59,12 @@ interface NaganeAPI {
     @POST("/to/login")
     suspend fun loginAdmin(
         @Body requestBody: TableAdminLogin
-    ): Call<ApiResponse<Any>>
+    ): Response<ApiResponse<Any>>
 
     // 해당 테이블 오더 비활성화 요청
     @PUT("/to/admin")
     suspend fun disconnectTable(
         @Body requestBody: TableCode
-    ): Call<ApiResponse<Any>>
+    ): Response<ApiResponse<Any>>
 
 }

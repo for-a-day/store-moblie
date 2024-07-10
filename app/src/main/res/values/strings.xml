@@ -11,6 +11,7 @@
     <string name="table_number">테이블 번호</string>
     <string name="table_name">테이블명</string>
     <string name="table_login_btn">기기 등록</string>
+    <string name="table_login_complete">기기 등록이 완료되었습니다.</string>
 
     <string name="sold_out">SOLD OUT</string>
 
@@ -25,6 +26,7 @@
     <string name="price_title">가격</string>
     <string name="description_title">설명</string>
     <string name="close">닫기</string>
+    <string name="disconnect">해제</string>
     <string name="add_cart">장바구니 담기</string>
 
     <string name="cancel">취소</string>
@@ -54,12 +56,18 @@
     <string name="go_payment">결제하기</string>
     <string name="payment_info_first">카드를 꽂아주세요.</string>
     <string name="payment_info_second">결제 중입니다.\n잠시만 기다려주세요.</string>
-    <string name="payment_info_third">결제가 완료되었습니다.\n감사합니다.</string>
-    <string name="payment_info_forth"></string>
+    <string name="payment_info_third">서버 측에 데이터 전송 중입니다. 잠시만 기다려주세요.</string>
+    <string name="payment_info_forth">결제가 완료되었습니다.\n감사합니다.</string>
 
     <string name="order_list">주문목록</string>
 
     <string name="admin_title">관리자 화면</string>
+    <string name="disconnect_check_title">기기 해제</string>
+    <string name="disconnect_check_info">정말 해당 기기를 등록 해제하시겠습니까?</string>
+    <string name="disconnect_complete">기기를 등록 해제했습니다.</string>
+    <string name="error">오류 발생</string>
+    <string name="final_title">종료</string>
+
     <string name="admin_fake_title">관리자 화면...인 줄 알았지?</string>
     <string name="result_error">오류가 발생했습니다.</string>
 

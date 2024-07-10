@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
 import com.nagane.table.data.model.TableAdminLogin
+import com.nagane.table.data.model.TableCode
 import com.nagane.table.ui.main.Screens
 import com.nagane.table.ui.screen.common.BackButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
@@ -121,17 +122,50 @@ fun LoginAdmin(
             storeCode.value.text.isNotEmpty()
 
     var showDialog by remember { mutableStateOf(false) }
+    var showInfo by remember { mutableStateOf(false) }
+    var nowCase by remember { mutableStateOf(0) }
 
     if (showDialog) {
         ConfirmDialog(
+            title = when(nowCase) {
+                0 -> stringResource(id = R.string.disconnect_check_title)
+                1 -> stringResource(id = R.string.final_title)
+                else -> stringResource(id = R.string.error)
+            },
+            infoString = when(nowCase) {
+                0 -> stringResource(id = R.string.disconnect_check_info)
+                1 -> stringResource(id = R.string.disconnect_complete)
+                else -> stringResource(id = R.string.error)
+            },
+            showInfo = showInfo,
             onDismiss = {
                 showDialog = false
-//                navController.navigate(Screens.Home.route) {
-//                    popUpTo(Screens.Order.route) { inclusive = true }
-//                }
+                if (nowCase == 1) {
+                    navController.navigate(Screens.Login.route) {
+                        popUpTo(Screens.Admin.route) { inclusive = true }
+                    }
+                }
+            },
+            onClickConfirm = {
+                loginViewModel.disConnectTable(
+                    tableCode = TableCode(tableCode.value.text)) { response ->
+                    if (response.statusCode == 200) {
+                        showInfo = true
+                        nowCase = 1
+                    } else {
+                        showInfo = true
+                        nowCase = 99
+//                        Toast.makeText(
+//                            context,
+//                            response.message ?: "서버와의 통신이 불가능합니다.",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
+                }
             }
         )
     }
+
 
     Column(
         modifier = modifier
@@ -203,15 +237,12 @@ fun LoginAdmin(
         ) {
             Text(
                 text = stringResource(id = R.string.admin_login_btn),
-                style = NaganeTypography.h5,
+                style = NaganeTypography.h2,
                 color = if (allFieldsFilled) nagane_theme_main else nagane_theme_light_0.copy(alpha = 0.5f)
             )
         }
     }
 }
-
-
-
 
 
 @Composable

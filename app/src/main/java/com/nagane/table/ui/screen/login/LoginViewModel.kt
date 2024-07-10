@@ -22,6 +22,7 @@ import com.nagane.table.data.model.TableLogin
 import com.nagane.table.data.table.AppDatabase
 import com.nagane.table.ui.main.Screens
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -40,22 +41,28 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             Log.d("loginTable", "$tableLogin 를 통해 로그인합니다.")
             try {
+                val response = RetrofitClient.apiService.loginTable(tableLogin)
                 // RetrofitClient를 사용하여 API 호출
-                RetrofitClient.makeApiCall(RetrofitClient.apiService.loginTable(tableLogin)) { response ->
-                    if (response != null) {
-                        // 성공적인 경우 데이터 저장 등의 처리
-                        sharedPreferences.edit().apply {
-                            putString("jwt_token", "임시 토큰")
-                            putString("tableCode", tableLogin.tableCode)
-                            putString("storeCode", tableLogin.storeCode)
-                            putString("tableNumber", tableLogin.tableNumber.toString())
-                            putString("tableName", tableLogin.tableName)
-                            apply()
-                        }
-                        onResult(response)
+
+                if (response.isSuccessful) {
+                    // 성공적인 경우 데이터 저장 등의 처리
+                    val responseBody = response.body()
+                    sharedPreferences.edit().apply {
+                        putString("jwt_token", "임시 토큰")
+                        putString("tableCode", tableLogin.tableCode)
+                        putString("storeCode", tableLogin.storeCode)
+                        putString("tableNumber", tableLogin.tableNumber.toString())
+                        putString("tableName", tableLogin.tableName)
+                        apply()
+                    }
+                    delay(500L)
+                    if (responseBody != null) {
+                        onResult(responseBody)
                     } else {
                         onResult(ApiResponse(statusCode = 404, message = "테이블 코드나 가맹점 코드를 확인해주세요."))
                     }
+                } else {
+                    onResult(ApiResponse(statusCode = 404, message = "테이블 코드나 가맹점 코드를 확인해주세요."))
                 }
             } catch (e: Exception) {
                 // 예외 발생 시 처리
@@ -69,14 +76,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         Log.d("loginAdmin", "$tableAdminLogin 를 통해 로그인합니다.")
         viewModelScope.launch {
             try {
-                RetrofitClient.makeApiCall(RetrofitClient.apiService.loginAdmin(tableAdminLogin)) { response ->
-                    if (response != null) {
-                        Log.d("loginAdmin", "로그인 성공")
-                        onResult(response)
+                val response = RetrofitClient.apiService.loginAdmin(tableAdminLogin)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    Log.d("loginAdmin", "로그인 성공: $responseBody")
+                    if (responseBody != null) {
+                        onResult(responseBody)
                     } else {
                         Log.e("loginAdmin", "테이블 코드나 가맹점 코드를 확인해주세요.")
                         onResult(ApiResponse(statusCode = 404, message = "테이블 코드나 가맹점 코드를 확인해주세요."))
                     }
+                } else {
+                    Log.e("loginAdmin", "테이블 코드나 가맹점 코드를 확인해주세요.")
+                    onResult(ApiResponse(statusCode = 404, message = "테이블 코드나 가맹점 코드를 확인해주세요."))
                 }
             } catch (e : Exception) {
                 Log.e("loginAdmin", "서버와의 통신에 실패했습니다. : $e")
@@ -88,22 +100,29 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private fun deleteData() {
         Log.d("deleteData", "모든 데이터를 삭제합니다")
         viewModelScope.launch {
+            sharedPreferences.edit().clear().apply()
             cartDao.deleteCart()
         }
     }
 
-    // 테이블 연결해제
+    // 테이블 연결 해제
     fun disConnectTable(tableCode: TableCode, onResult: (ApiResponse<Any>) -> Unit) {
         viewModelScope.launch {
             try {
-                RetrofitClient.makeApiCall(RetrofitClient.apiService.disconnectTable(tableCode)) { response ->
-                    if (response != null && response.statusCode == 200) {
-                        onResult(response)
+                val response = RetrofitClient.apiService.disconnectTable(tableCode)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    Log.d("loginAdmin", "로그인 성공: $responseBody")
+                    if (responseBody != null) {
                         deleteData()
-                        sharedPreferences.edit().clear().apply()
+                        onResult(responseBody)
                     } else {
-                        onResult(ApiResponse(statusCode = 404, message = "오류가 발생했습니다."))
+                        Log.e("loginAdmin", "테이블 코드를 확인해주세요.")
+                        onResult(ApiResponse(statusCode = 404, message = "테이블 코드를 확인해주세요."))
                     }
+                } else {
+                    Log.e("loginAdmin", "테이블 코드를 확인해주세요.")
+                    onResult(ApiResponse(statusCode = 404, message = "테이블 코드를 확인해주세요."))
                 }
             } catch (e : Exception) {
                 onResult(ApiResponse(statusCode = 500, message = "서버와의 통신에 실패했습니다."))

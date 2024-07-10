@@ -3,15 +3,15 @@ package com.nagane.table.data.api
 import com.nagane.table.data.model.TableLogin
 import retrofit2.Call
 
-private const val TAG = "ApiRequest"
-
-fun loginTableApi(
-    tableLogin: TableLogin,
-    onResult: (ApiResponse<Any>?) -> Unit
-) {
-    val call: Call<ApiResponse<Any>> = RetrofitClient.apiService.loginTable(tableLogin)
-    RetrofitClient.makeApiCall(call, onResult)
-}
+//private const val TAG = "ApiRequest"
+//
+//fun loginTableApi(
+//    tableLogin: TableLogin,
+//    onResult: (ApiResponse<Any>?) -> Unit
+//) {
+//    val call: Call<ApiResponse<Any>> = RetrofitClient.apiService.loginTable(tableLogin)
+//    RetrofitClient.makeApiCall(call, onResult)
+//}
 
 /*
 *             try {

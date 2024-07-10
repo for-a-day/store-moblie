@@ -49,9 +49,10 @@ import com.nagane.table.ui.screen.common.LoginInfo
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
+import com.nagane.table.ui.theme.nagane_theme_light_6
 import com.nagane.table.ui.theme.nagane_theme_light_8
 import com.nagane.table.ui.theme.nagane_theme_main
-
+import com.nagane.table.ui.theme.nagane_theme_sub
 
 
 @Composable
@@ -96,13 +97,18 @@ fun LoginScreen(
                         tableLogin,
                         onResult = { response ->
                             if (response.statusCode == 200) {
+                                    Toast.makeText(
+                                        context,
+                                        response.message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                     navController.navigate(Screens.Home.route) {
                                     popUpTo(Screens.Login.route) { inclusive = true }
                                 }
                             } else {
                                 Toast.makeText(
                                     context,
-                                    response?.message ?: "서버와의 통신이 불가능합니다.",
+                                    response.message,
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -198,6 +204,7 @@ fun LoginTableOrder(
         )
 
         Button(
+            enabled = allFieldsFilled,
             onClick = { onClick(
                 TableLogin(
                     tableCode.value.text,
@@ -213,13 +220,14 @@ fun LoginTableOrder(
             colors = ButtonDefaults.buttonColors(
                 containerColor = nagane_theme_main,
                 contentColor = nagane_theme_light_0,
-                disabledContainerColor = nagane_theme_light_8,
-                disabledContentColor = nagane_theme_light_0
+                disabledContainerColor = nagane_theme_light_6.copy(alpha = 0.75f),
+                disabledContentColor = nagane_theme_light_0.copy(alpha = 0.25f)
             )
         ) {
             Text(
                 text = stringResource(id = R.string.table_login_btn),
-                style = NaganeTypography.h5
+                style = NaganeTypography.h2,
+                color = if (allFieldsFilled) nagane_theme_sub else nagane_theme_light_0.copy(alpha = 0.5f)
             )
         }
     }
