@@ -47,7 +47,7 @@ interface NaganeAPI {
     @POST("/to/order")
     suspend fun createOrder(
         @Body responseBody : OrderCreateDto
-    ): ApiResponse<Order>
+    ): Response<ApiResponse<Order>>
 
     // 해당 테이블 현재 주문 내역 조회
     @GET("/to/order")

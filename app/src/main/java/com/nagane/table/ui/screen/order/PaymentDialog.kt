@@ -20,7 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nagane.table.R
+import com.nagane.table.ui.screen.home.CartViewModel
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_main
 import com.nagane.table.ui.theme.nagane_theme_sub
@@ -29,7 +31,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun PaymentDialog(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    cartViewModel: CartViewModel = viewModel(),
+    paymentCase: Int,
+    dineCase: Int
 ) {
     val scope = rememberCoroutineScope()
     var dialogMessage by remember { mutableStateOf(R.string.payment_info_first) }
@@ -40,13 +45,24 @@ fun PaymentDialog(
             delay(3000)
             dialogMessage = R.string.payment_info_second
             showProgressBar = true
-            delay(5000)
-            dialogMessage = R.string.payment_info_third
-            delay(5000)
-            dialogMessage = R.string.payment_info_forth
-            showProgressBar = false
             delay(3000)
-            onDismiss()
+            
+            // 이 시점에서 API 요청 실행
+            val success = cartViewModel.createOrder(paymentCase, dineCase)
+
+            if (success) {
+                dialogMessage = R.string.payment_info_third
+                delay(5000)
+                dialogMessage = R.string.payment_info_forth
+                showProgressBar = false
+                delay(3000)
+                onDismiss() // 성공 시 콜백 실행
+            } else {
+                dialogMessage = R.string.payment_fail // 실패 메시지 설정
+                showProgressBar = false
+                delay(3000)
+                onDismiss() // 실패 시 콜백 실행
+            }
         }
     }
 
@@ -63,7 +79,7 @@ fun PaymentDialog(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = stringResource(id = dialogMessage),
-                        style = NaganeTypography.h2,
+                        style = NaganeTypography.h1,
                         textAlign = TextAlign.Center,
                         color = nagane_theme_main
                     )

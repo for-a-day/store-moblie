@@ -67,6 +67,7 @@ import com.nagane.table.ui.screen.common.BackButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
 import com.nagane.table.ui.screen.home.CartViewModel
 import com.nagane.table.ui.screen.home.components.DrawerContentButton
+import com.nagane.table.ui.screen.order.components.MethodBox
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
@@ -424,7 +425,10 @@ fun OrderBottomButtonRow(
                 navController.navigate(Screens.Home.route) {
                     popUpTo(Screens.Order.route) { inclusive = true }
                 }
-            }
+            },
+            cartViewModel = cartViewModel,
+            paymentCase = paymentCase,
+            dineCase = dineCase
         )
     }
 
@@ -455,95 +459,20 @@ fun OrderBottomButtonRow(
                 .height(80.dp)
                 .background(if (paymentEnable) nagane_theme_sub else nagane_theme_light_6.copy(alpha = 0.75f)),
             icon = Icons.Filled.Paid,
-            iconColor = if (paymentEnable) LocalContentColor.current else nagane_theme_light_0.copy(alpha = 0.5f),
+            iconColor = if (paymentEnable) LocalContentColor.current else nagane_theme_light_0.copy(
+                alpha = 0.5f
+            ),
             text = R.string.go_payment,
             textColor = if (paymentEnable) nagane_theme_main else nagane_theme_light_0.copy(alpha = 0.5f),
             onClick = {
                 if (paymentEnable) {
                     showDialog = true
-                    cartViewModel.createOrder(
-                        paymentCase = paymentCase,
-                        dineCase = dineCase
-                    )
                 }
             }
         )
-
     }
 }
 
-// 선택한 건 음영 효과에 밑은 main color로 대신 음영 있으니까 대비 가능 굿~
-@Preview
-@Composable
-fun MethodBox(
-    modifier: Modifier = Modifier,
-    isSelected: Boolean = false,
-    isDisabled: Boolean = false,
-    icon: ImageVector = Icons.Filled.CreditCard,
-    text: Int = R.string.payment_card,
-    onClick: () -> Unit = {}
-) {
-    Card(
-        modifier = modifier
-            .size(width = 180.dp, height = 140.dp)
-            .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isSelected || isDisabled) 8.dp else 0.dp
-        ),
-        border = BorderStroke((2).dp,
-            if (isDisabled) nagane_theme_light_6.copy(alpha = 0.75f)
-            else if (isSelected) nagane_theme_main
-            else nagane_theme_sub)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(if (isDisabled) nagane_theme_light_6.copy(alpha = 0.75f)
-                    else if (isSelected) nagane_theme_sub
-                    else nagane_theme_main),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Divider(
-                    modifier = Modifier
-                        .padding(
-                            vertical = 8.dp
-                        )
-                        .width(80.dp),
-                    thickness = 4.dp,
-                    color = if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
-                    else if (isSelected) nagane_theme_main
-                    else nagane_theme_sub,
-                )
-                Icon(
-                    icon,
-                    contentDescription = stringResource(id = text),
-                    tint = if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
-                    else if (isSelected) nagane_theme_main
-                    else nagane_theme_sub,
-                    modifier = Modifier.size(44.dp)
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = stringResource(id = text),
-                    style = NaganeTypography.h2,
-                    fontSize = 26.sp,
-                    color = if (isDisabled) nagane_theme_light_0.copy(alpha = 0.5f)
-                    else if (isSelected) nagane_theme_main
-                    else nagane_theme_sub,
-                )
-            }
-        }
-    }
-}
 
 @Preview(
     device = Devices.TABLET)

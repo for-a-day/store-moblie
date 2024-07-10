@@ -58,7 +58,7 @@ import com.nagane.table.R
 import com.nagane.table.ui.screen.common.BackButton
 import com.nagane.table.ui.screen.common.CustomAppBarUI
 import com.nagane.table.ui.screen.home.MenuViewModel
-import com.nagane.table.ui.screen.order.MethodBox
+import com.nagane.table.ui.screen.order.components.MethodBox
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_light_0
 import com.nagane.table.ui.theme.nagane_theme_light_6

@@ -68,6 +68,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun deleteCartAllMenu() {
         Log.d("deleteCartAllMenu", "모든 항목을 장바구니에서 삭제합니다")
+        delay(3000L)
         cartDao.deleteCart()
         loadCartItems()
     }
@@ -114,10 +115,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-        // 주문 요청
-    fun createOrder(
+    // 주문 요청
+    suspend fun createOrder(
         paymentCase : Int, dineCase: Int
-    ) {
+    ) : Boolean {
         // 카트에 들어있던 정보들 orderMenuCreateDto 형식으로 변환
         val orderMenuCreateList = cartItems.value.map { cart ->
             OrderMenuDto(
@@ -127,7 +128,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
             )
         }
 
-        if (tableCode != null && storeCode != null) {
+        return if (tableCode != null && storeCode != null) {
             val orderCreateDto = OrderCreateDto(
                 amount = cartItems.value.sumOf { it.price * it.quantity },
                 paymentMethod = when (paymentCase) {
@@ -144,20 +145,24 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
             )
 
             Log.d("createOrder", "$orderCreateDto")
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val response = RetrofitClient.apiService.createOrder(orderCreateDto)
-                    if (response != null) {
-                        Log.d("API_INFO", "주문 성공 : ${response.message}")
-                    }
-                    delay(12100L)
+            try {
+                val response = RetrofitClient.apiService.createOrder(orderCreateDto)
+
+                if (response.isSuccessful) {
+                    Log.d("API_INFO", "주문 성공 : ${response.body()?.message}")
                     deleteCartAllMenu()
-                } catch (e: Exception) {
-                    Log.e("API_ERROR", "주문 실패 : ${e.message}")
+                    true
+                } else {
+                    Log.e("API_ERROR", "주문 실패 : ${response.message()}")
+                    false
                 }
+            } catch (e: Exception) {
+                Log.e("API_ERROR", "주문 실패 : ${e.message}")
+                false
             }
         } else {
             Log.e("API_ERROR", "주문 실패 : 가맹점 코드나 테이블 코드 중 null 값 발견")
+            false
         }
     }
 }
