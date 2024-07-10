@@ -150,7 +150,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                     if (response != null) {
                         Log.d("API_INFO", "주문 성공 : ${response.message}")
                     }
-                    delay(9003L)
+                    delay(12100L)
                     deleteCartAllMenu()
                 } catch (e: Exception) {
                     Log.e("API_ERROR", "주문 실패 : ${e.message}")

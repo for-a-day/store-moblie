@@ -42,6 +42,8 @@ fun PaymentDialog(
             showProgressBar = true
             delay(5000)
             dialogMessage = R.string.payment_info_third
+            delay(5000)
+            dialogMessage = R.string.payment_info_forth
             showProgressBar = false
             delay(3000)
             onDismiss()

@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_extra
 import com.nagane.table.ui.theme.nagane_theme_light_6
@@ -41,10 +42,10 @@ fun CustomAppBarPreview() {
 fun CustomAppBarUI(
     title : String = "마이페이지",
     leftButton  :@Composable () -> Unit = {
-        Box(modifier = Modifier.width(44.dp))
+        Box(modifier = Modifier.size(60.dp))
     },
     rightButton  :@Composable () -> Unit = {
-        Box(modifier = Modifier.width(44.dp))
+        Box(modifier = Modifier.size(60.dp))
     },
     backgroundColor : Color = nagane_theme_main,
     subColor : Color = nagane_theme_sub
@@ -65,6 +66,7 @@ fun CustomAppBarUI(
             leftButton()
             Text(text = title,
                 style = NaganeTypography.h1,
+                fontSize = 24.sp,
                 color = subColor)
             rightButton()
         }

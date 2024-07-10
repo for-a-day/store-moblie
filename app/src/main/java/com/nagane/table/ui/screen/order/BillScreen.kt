@@ -104,14 +104,14 @@ fun BillScreen(
         topBar = {
             CustomAppBarUI(
                 title = stringResource(id = R.string.order_title),
-                leftButton = {
-                    BackButton(
-                        onClick = {
-                            navController.popBackStack()
-                        },
-                        tint = defaultSubColor
-                    )
-                },
+//                leftButton = {
+//                    BackButton(
+//                        onClick = {
+//                            navController.popBackStack()
+//                        },
+//                        tint = defaultSubColor
+//                    )
+//                },
                 backgroundColor = highlightColor,
                 subColor = defaultSubColor
             )

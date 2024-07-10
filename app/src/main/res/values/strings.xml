@@ -13,6 +13,9 @@
     <string name="table_login_btn">기기 등록</string>
     <string name="table_login_complete">기기 등록이 완료되었습니다.</string>
 
+    <string name="odd">홀</string>
+    <string name="even">짝</string>
+
     <string name="sold_out">SOLD OUT</string>
 
     <string name="admin_login_title">관리자 로그인을 위한 정보를 입력해주세요.</string>
