@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +30,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
 import com.nagane.table.ui.main.Screens
+import com.nagane.table.ui.theme.NaganeTypography
+import com.nagane.table.ui.theme.nagane_theme_main
 import com.nagane.table.ui.theme.nagane_theme_sub
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,8 +39,9 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun MoveAdminButton(
-    navController: NavController = rememberNavController()
+fun MoveFakeButton(
+    navController: NavController = rememberNavController(),
+    tableNumber: String = "-99번"
 ) {
     var count by remember { mutableIntStateOf(0) }
     var timerJob by remember { mutableStateOf<Job?>(null) }
@@ -62,24 +67,35 @@ fun MoveAdminButton(
         count++
 
         if (count >= 5) {
-            navController.navigate(Screens.Admin.route)
+            navController.navigate(Screens.Fake.route)
             resetCounter()
         }
     }
 
-//    Image(
-//        modifier = Modifier
-//            .width(120.dp)
-//            .padding(horizontal = 16.dp)
-//            .clickable { onButtonClick() },
-//        painter = painterResource(id = R.drawable.nagane_dark_m),
-//        contentDescription = "Logo of Nagane"
-//    )
-    Box(
+    Card(
         modifier = Modifier
-            .height(64.dp)
-            .width(80.dp)
-            .clickable { onButtonClick() }
-            // .background(nagane_theme_sub)
-    )
+            .size(80.dp)
+            .clickable {
+                onButtonClick()
+            },
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        ),
+        colors = CardDefaults.cardColors(
+            contentColor = nagane_theme_sub
+        )
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(nagane_theme_sub),
+        ) {
+            Text(
+                text = tableNumber,
+                style = NaganeTypography.h2,
+                color = nagane_theme_main
+            )
+        }
+    }
 }

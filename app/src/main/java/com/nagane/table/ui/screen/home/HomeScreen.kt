@@ -141,6 +141,7 @@ private fun HomeContent(
             CustomBottomBar(
                 onClickBill = onClickBill,
                 onClickGoCart = onClickGoCart,
+                navController = navController
             )
         }
     ) {
@@ -208,7 +209,7 @@ fun HomeFramePreview() {
                     HomeAppBar(navController = rememberNavController())
                 },
                 bottomBar = {
-                    CustomBottomBar()
+                    CustomBottomBar(navController = rememberNavController())
                 }
             ) {
                 Column(

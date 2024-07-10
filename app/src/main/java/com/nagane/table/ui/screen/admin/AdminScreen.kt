@@ -1,6 +1,7 @@
 package com.nagane.table.ui.screen.admin
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -68,14 +69,6 @@ fun AdminScreen(
         topBar = {
             CustomAppBarUI(
                 title = stringResource(id = R.string.admin_title),
-                leftButton = {
-                    BackButton(
-                        onClick = {
-                            navController.popBackStack()
-                        },
-                        tint = nagane_theme_main
-                    )
-                },
                 backgroundColor = nagane_theme_sub,
                 subColor = nagane_theme_main
             )
@@ -84,9 +77,9 @@ fun AdminScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
                 .verticalScroll(rememberScrollState())
-                .background(nagane_theme_main),
+                .background(nagane_theme_main)
+                .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -170,7 +163,7 @@ fun LoginAdmin(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .background(nagane_theme_main),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -239,6 +232,27 @@ fun LoginAdmin(
                 text = stringResource(id = R.string.admin_login_btn),
                 style = NaganeTypography.h2,
                 color = if (allFieldsFilled) nagane_theme_main else nagane_theme_light_0.copy(alpha = 0.5f)
+            )
+        }
+        Button(
+            modifier = Modifier
+                .padding(8.dp)
+                .width(280.dp)
+                .height(52.dp),
+            onClick = {
+                navController.popBackStack()
+            },
+            enabled = !(showDialog),
+            border = BorderStroke(2.dp, if (showDialog) nagane_theme_light_6.copy(alpha = 0.75f) else nagane_theme_sub),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = nagane_theme_main,
+                contentColor = nagane_theme_sub,
+                disabledContainerColor = nagane_theme_light_6.copy(alpha = 0.75f),
+                disabledContentColor = nagane_theme_light_0.copy(alpha = 0.25f)
+            )) {
+            Text(
+                text = "나가기",
+                style = NaganeTypography.h2,
             )
         }
     }

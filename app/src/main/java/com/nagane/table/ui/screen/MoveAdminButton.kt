@@ -1,9 +1,11 @@
 package com.nagane.table.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +27,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
+import com.nagane.table.ui.main.Screens
+import com.nagane.table.ui.theme.nagane_theme_sub
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -58,17 +62,24 @@ fun MoveAdminButton(
         count++
 
         if (count >= 5) {
-            navController.navigate("admin")
+            navController.navigate(Screens.Admin.route)
             resetCounter()
         }
     }
 
-    Image(
+//    Image(
+//        modifier = Modifier
+//            .width(120.dp)
+//            .padding(horizontal = 16.dp)
+//            .clickable { onButtonClick() },
+//        painter = painterResource(id = R.drawable.nagane_dark_m),
+//        contentDescription = "Logo of Nagane"
+//    )
+    Box(
         modifier = Modifier
-            .width(120.dp)
-            .padding(horizontal = 16.dp)
-            .clickable { onButtonClick() },
-        painter = painterResource(id = R.drawable.nagane_dark_m),
-        contentDescription = "Logo of Nagane"
+            .height(64.dp)
+            .width(80.dp)
+            .clickable { onButtonClick() }
+            // .background(nagane_theme_sub)
     )
 }

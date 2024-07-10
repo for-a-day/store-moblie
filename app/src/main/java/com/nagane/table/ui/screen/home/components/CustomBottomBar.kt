@@ -26,7 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.nagane.table.R
+import com.nagane.table.ui.screen.MoveAdminButton
 import com.nagane.table.ui.theme.NaganeTableTheme
 import com.nagane.table.ui.theme.NaganeTypography
 import com.nagane.table.ui.theme.nagane_theme_main
@@ -35,27 +38,34 @@ import com.nagane.table.ui.theme.nagane_theme_sub
 @Composable
 fun CustomBottomBar(
     onClickBill: () -> Unit = {},
-    onClickGoCart: () -> Unit = {}
+    onClickGoCart: () -> Unit = {},
+    navController : NavController,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .background(nagane_theme_main),
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        BottomButton(
-            Icons.Filled.AdfScanner,
-            R.string.bottom_bill,
-            onClickBill
-        )
-        BottomButton(
-            Icons.Filled.ShoppingCartCheckout,
-            R.string.bottom_cart,
-            onClickGoCart
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.width(16.dp))
+            MoveAdminButton(navController = navController)
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            BottomButton(
+                Icons.Filled.AdfScanner,
+                R.string.bottom_bill,
+                onClickBill
+            )
+            BottomButton(
+                Icons.Filled.ShoppingCartCheckout,
+                R.string.bottom_cart,
+                onClickGoCart
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
     }
 }
 
@@ -69,7 +79,8 @@ fun BottomButton(
         modifier = Modifier
             .padding(
                 vertical = 16.dp,
-                horizontal = 8.dp)
+                horizontal = 8.dp
+            )
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = nagane_theme_sub
@@ -105,7 +116,7 @@ fun BottomButton(
 fun CustomBottomBarPreview() {
     NaganeTableTheme {
         Surface {
-            CustomBottomBar()
+            CustomBottomBar(navController = rememberNavController())
         }
     }
 }

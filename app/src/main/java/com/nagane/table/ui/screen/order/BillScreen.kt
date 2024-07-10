@@ -122,7 +122,8 @@ fun BillScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
-                    .background(nagane_theme_light_0)
+                    .background(nagane_theme_light_0),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(id = R.string.order_yet),
@@ -130,6 +131,27 @@ fun BillScreen(
                     fontSize = 32.sp,
                     color = highlightColor
                 )
+                Spacer(modifier = Modifier.height(64.dp))
+                Button(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(280.dp)
+                        .height(52.dp),
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    border = BorderStroke(2.dp, nagane_theme_main),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = nagane_theme_main,
+                        contentColor = nagane_theme_sub,
+                        disabledContainerColor = nagane_theme_light_6.copy(alpha = 0.75f),
+                        disabledContentColor = nagane_theme_light_0.copy(alpha = 0.25f)
+                    )) {
+                    Text(
+                        text = "닫기",
+                        style = NaganeTypography.h2,
+                    )
+                }
             }
         } else {
             Box(
