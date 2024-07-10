@@ -42,8 +42,7 @@ fun HomeAppBar(
                 contentDescription = "Logo of Nagane"
             )
         },
-        rightBu.
-        tton = {
+        rightButton = {
             MoveFakeButton(
                 navController = navController,
                 tableNumber = tableNumber

@@ -94,6 +94,7 @@ fun LoginScreen(
                 navController = navController,
                 onClick = { tableLogin ->
                     loginViewModel.loginTable(
+                        context = context,
                         tableLogin,
                         onResult = { response ->
                             if (response.statusCode == 200) {

@@ -34,6 +34,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
     val tableNumber = sharedPreferences.getString("tableNumber", "-1")
     val storeCode = sharedPreferences.getString("storeCode", "-1")
     val tableName = sharedPreferences.getString("tableName", "-1")
+    private val accessToken = sharedPreferences.getString("accessToken", "-1")
 
     init {
         fetchCategories()
@@ -44,15 +45,19 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("API_INFO", "가맹점 코드 가져오기 : ${storeCode}")
             try {
-                val response = RetrofitClient.apiService.getCategories()
-                if (response.statusCode == 200) {
-                    val categoryList = response.data?.categoryList ?: emptyList()
-                    val allCategories = listOf(Category(0, "전체보기")) + categoryList
-                    _categories.value = allCategories
+                if (accessToken  != null) {
+                    val response = RetrofitClient.apiService.getCategories("Bearer $accessToken ")
+                    if (response.statusCode == 200) {
+                        val categoryList = response.data?.categoryList ?: emptyList()
+                        val allCategories = listOf(Category(0, "전체보기")) + categoryList
+                        _categories.value = allCategories
 
-                    fetchMenus(categoryNo = allCategories[0].categoryNo)
+                        fetchMenus(categoryNo = allCategories[0].categoryNo)
+                    } else {
+                        Log.e("API_ERROR", "카테고리 정보 가져오기 실패 : ${response.message}")
+                    }
                 } else {
-
+                    Log.e("API_ERROR", "토큰을 찾을 수 없습니다.")
                 }
             } catch (e: Exception) {
                 Log.e("API_ERROR", "카테고리 정보 가져오기 실패 : ${e.message}")
@@ -66,7 +71,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 Log.d("API_INFO", "메뉴 리스트 가져오기")
-                val response = storeCode?.let { RetrofitClient.apiService.getMenuList(it, categoryNo) }
+                val response = storeCode?.let { RetrofitClient.apiService.getMenuList(it, categoryNo, "Bearer $accessToken ") }
                 if (response != null) {
                     Log.d("API_INFO", "메뉴 리스트 가져오기 성공 : ${response.message}")
                     if (response.statusCode == 200) {
@@ -89,7 +94,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
                 Log.d("API_INFO", "선택한 메뉴 상세정보 가져오기")
                 val response = storeCode?.let {
                     Log.d("API_INFO", "선택한 메뉴 상세정보 가져오기 $it $menuNo")
-                    RetrofitClient.apiService.getMenuDetail(it, menuNo)
+                    RetrofitClient.apiService.getMenuDetail(it, menuNo, "Bearer $accessToken ")
                 }
                 if (response != null) {
                     Log.d("API_INFO", "메뉴 상세 정보 가져오기 성공 : ${response.message}")

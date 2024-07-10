@@ -21,6 +21,7 @@ import com.nagane.table.data.model.TableCode
 import com.nagane.table.data.model.TableLogin
 import com.nagane.table.data.table.AppDatabase
 import com.nagane.table.ui.main.Screens
+import com.nagane.table.ui.util.SharedPreferencesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,33 +32,51 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("table_prefs", Context.MODE_PRIVATE)
     private val cartDao : CartDao = AppDatabase.getDatabase(application).cartDao()
+    private val accessToken = sharedPreferences.getString("accessToken", "-1")
 
     fun checkIfTableExists(): Boolean {
-        val token = sharedPreferences.getString("jwt_token", null)
+        val token = sharedPreferences.getString("tableCode", null)
         return token != null
     }
 
-    fun loginTable(tableLogin: TableLogin, onResult: (ApiResponse<Any>) -> Unit) {
+    fun loginTable(context: Context, tableLogin: TableLogin, onResult: (ApiResponse<Any>) -> Unit) {
         viewModelScope.launch {
+            Log.d("loginTable", "$tableLogin 를 통해 로그인합니다.")
             Log.d("loginTable", "$tableLogin 를 통해 로그인합니다.")
             try {
                 val response = RetrofitClient.apiService.loginTable(tableLogin)
-                // RetrofitClient를 사용하여 API 호출
 
                 if (response.isSuccessful) {
-                    // 성공적인 경우 데이터 저장 등의 처리
                     val responseBody = response.body()
-                    sharedPreferences.edit().apply {
-                        putString("jwt_token", "임시 토큰")
-                        putString("tableCode", tableLogin.tableCode)
-                        putString("storeCode", tableLogin.storeCode)
-                        putString("tableNumber", tableLogin.tableNumber.toString())
-                        putString("tableName", tableLogin.tableName)
-                        apply()
-                    }
-                    delay(500L)
-                    if (responseBody != null) {
-                        onResult(responseBody)
+                    if (responseBody != null && responseBody.statusCode == 200) {
+                        val tokens = responseBody.data?.tokens
+                        if (tokens != null) {
+//                            // 토큰을 SharedPreferences에 저장
+//                            SharedPreferencesManager.saveTokens(
+//                                context,
+//                                tokens.accessToken,
+//                                tokens.refreshToken
+//                            )
+                            // SharedPreferencesManager.saveAdditionalData(context, tableLogin)
+                            Log.d("tokens", tokens.accessToken)
+                            // 추가적인 데이터를 SharedPreferences에 저장
+                            sharedPreferences.edit().apply {
+                                putString("jwt_token", "임시 토큰")
+                                putString("tableCode", tableLogin.tableCode)
+                                putString("storeCode", tableLogin.storeCode)
+                                putString("tableNumber", tableLogin.tableNumber.toString())
+                                putString("tableName", tableLogin.tableName)
+                                putString("accessToken", tokens.accessToken)
+                                putString("refreshToken", tokens.refreshToken)
+                                apply()
+                            }
+
+                            delay(500L)
+
+                            onResult(ApiResponse(statusCode = 200, message = "로그인 성공", data = responseBody.data))
+                        } else {
+                            onResult(ApiResponse(statusCode = 404, message = "토큰을 받아올 수 없습니다."))
+                        }
                     } else {
                         onResult(ApiResponse(statusCode = 404, message = "테이블 코드나 가맹점 코드를 확인해주세요."))
                     }
@@ -65,7 +84,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     onResult(ApiResponse(statusCode = 404, message = "테이블 코드나 가맹점 코드를 확인해주세요."))
                 }
             } catch (e: Exception) {
-                // 예외 발생 시 처리
                 onResult(ApiResponse(statusCode = 500, message = "서버와의 통신에 실패했습니다."))
             }
         }
@@ -76,7 +94,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         Log.d("loginAdmin", "$tableAdminLogin 를 통해 로그인합니다.")
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.apiService.loginAdmin(tableAdminLogin)
+                val response = RetrofitClient.apiService.loginAdmin(tableAdminLogin, "Bearer $accessToken ")
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     Log.d("loginAdmin", "로그인 성공: $responseBody")
@@ -109,7 +127,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun disConnectTable(tableCode: TableCode, onResult: (ApiResponse<Any>) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.apiService.disconnectTable(tableCode)
+                val response = RetrofitClient.apiService.disconnectTable(tableCode,"Bearer $accessToken ")
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     Log.d("loginAdmin", "로그인 성공: $responseBody")

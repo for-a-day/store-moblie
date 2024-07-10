@@ -26,6 +26,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         application.getSharedPreferences("table_prefs", Context.MODE_PRIVATE)
     val storeCode = sharedPreferences.getString("storeCode", "-1")
     val tableCode = sharedPreferences.getString("tableCode", "-1")
+    private val accessToken = sharedPreferences.getString("accessToken", "-1")
 
     init {
         fetchOrderList()
@@ -35,7 +36,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("fetchOrderList", "주문 리스트 데이터를 불러옵니다.")
             try {
-                val response = tableCode?.let { RetrofitClient.apiService.getOrderList(it) }
+                val response = tableCode?.let { RetrofitClient.apiService.getOrderList(it, "Bearer $accessToken ") }
 
                 if (response != null && response.statusCode == 200) {
                     _orderList.value = response.data?.orderList ?: emptyList()

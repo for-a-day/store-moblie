@@ -31,6 +31,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         application.getSharedPreferences("table_prefs", Context.MODE_PRIVATE)
     val storeCode = sharedPreferences.getString("storeCode", "-1")
     val tableCode = sharedPreferences.getString("tableCode", "-1")
+    val accessToken = sharedPreferences.getString("accessToken", "-1")
 
     fun fetchCartItems() {
         viewModelScope.launch {
@@ -146,7 +147,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
             Log.d("createOrder", "$orderCreateDto")
             try {
-                val response = RetrofitClient.apiService.createOrder(orderCreateDto)
+                val response = RetrofitClient.apiService.createOrder(orderCreateDto, "Bearer $accessToken ")
 
                 if (response.isSuccessful) {
                     Log.d("API_INFO", "주문 성공 : ${response.body()?.message}")

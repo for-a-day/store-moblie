@@ -118,12 +118,13 @@ fun BillScreen(
         }
     ) {
         if (orderList.isEmpty()) {
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
                     .background(nagane_theme_light_0),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = stringResource(id = R.string.order_yet),
