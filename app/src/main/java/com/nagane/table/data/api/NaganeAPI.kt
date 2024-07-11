@@ -63,7 +63,7 @@ interface NaganeAPI {
     ) : ApiResponse<OrderResponseList>
 
     // 관리자 모드 로그인
-    @POST("/to/login")
+    @POST("/to/admin")
     suspend fun loginAdmin(
         @Body requestBody: TableAdminLogin,
         @Header("Authorization") token: String
