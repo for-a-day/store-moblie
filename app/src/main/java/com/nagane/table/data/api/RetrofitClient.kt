@@ -1,5 +1,7 @@
 package com.nagane.table.data.api
 
+import AuthInterceptor
+import android.content.Context
 import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -12,17 +14,33 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     private const val BASE_URL = "http://10.0.2.2:9001/"
 
-    private val okHttpClient = OkHttpClient.Builder().build()
+    // private val okHttpClient = OkHttpClient.Builder().build()
 
-    val apiService: NaganeAPI by lazy {
-        Retrofit.Builder()
+//    // OkHttpClient 설정
+//    private val okHttpClient = OkHttpClient.Builder()
+//        .addInterceptor(AuthInterceptor())  // AuthInterceptor 추가
+//        .build()
+//
+//    val apiService: NaganeAPI by lazy {
+//        Retrofit.Builder()
+//            .baseUrl(BASE_URL)
+//            .client(okHttpClient)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//            .create(NaganeAPI::class.java)
+//    }
+    fun create(context: Context): NaganeAPI {
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor(context))  // AuthInterceptor에 Context 전달
+            .build()
+
+        return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(NaganeAPI::class.java)
     }
-
 //    @RequiresApi(Build.VERSION_CODES.O)
 //    private fun gsonConverterFactory(): GsonConverterFactory {
 //        val localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")

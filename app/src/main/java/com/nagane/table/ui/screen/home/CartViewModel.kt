@@ -1,5 +1,6 @@
 package com.nagane.table.ui.screen.home
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -32,6 +33,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     val storeCode = sharedPreferences.getString("storeCode", "-1")
     val tableCode = sharedPreferences.getString("tableCode", "-1")
     val accessToken = sharedPreferences.getString("accessToken", "-1")
+
+    @SuppressLint("StaticFieldLeak")
+    private val context: Context = application.applicationContext
+    private val apiService = RetrofitClient.create(context)
 
     fun fetchCartItems() {
         viewModelScope.launch {
@@ -119,7 +124,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     // 주문 요청
     suspend fun createOrder(
         paymentCase : Int, dineCase: Int
-    ) : Boolean {
+    ) : Int {
         // 카트에 들어있던 정보들 orderMenuCreateDto 형식으로 변환
         val orderMenuCreateList = cartItems.value.map { cart ->
             OrderMenuDto(
@@ -147,23 +152,23 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
             Log.d("createOrder", "$orderCreateDto")
             try {
-                val response = RetrofitClient.apiService.createOrder(orderCreateDto, "Bearer $accessToken ")
+                val response = apiService.createOrder(orderCreateDto, "Bearer $accessToken ")
 
                 if (response.isSuccessful) {
                     Log.d("API_INFO", "주문 성공 : ${response.body()?.message}")
                     deleteCartAllMenu()
-                    true
+                    200
                 } else {
-                    Log.e("API_ERROR", "주문 실패 : ${response.message()}")
-                    false
+                    Log.e("API_ERROR", "주문 실패 : RESPONSE NOT SUCCESS ${response.code() }")
+                    400
                 }
             } catch (e: Exception) {
                 Log.e("API_ERROR", "주문 실패 : ${e.message}")
-                false
+                500
             }
         } else {
             Log.e("API_ERROR", "주문 실패 : 가맹점 코드나 테이블 코드 중 null 값 발견")
-            false
+            404
         }
     }
 }

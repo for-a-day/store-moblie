@@ -48,9 +48,9 @@ fun PaymentDialog(
             delay(3000)
             
             // 이 시점에서 API 요청 실행
-            val success = cartViewModel.createOrder(paymentCase, dineCase)
+            val result = cartViewModel.createOrder(paymentCase, dineCase)
 
-            if (success) {
+            if (result == 200) {
                 dialogMessage = R.string.payment_info_third
                 delay(5000)
                 dialogMessage = R.string.payment_info_forth
@@ -58,7 +58,11 @@ fun PaymentDialog(
                 delay(3000)
                 onDismiss() // 성공 시 콜백 실행
             } else {
-                dialogMessage = R.string.payment_fail // 실패 메시지 설정
+                if (result == 400) {
+                    dialogMessage = R.string.payment_over_count // 실패 메시지 설정
+                } else {
+                    dialogMessage = R.string.payment_fail // 실패 메시지 설정
+                }
                 showProgressBar = false
                 delay(3000)
                 onDismiss() // 실패 시 콜백 실행

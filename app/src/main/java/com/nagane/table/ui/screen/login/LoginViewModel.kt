@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nagane.table.data.api.ApiResponse
@@ -34,6 +35,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val cartDao : CartDao = AppDatabase.getDatabase(application).cartDao()
     private val accessToken = sharedPreferences.getString("accessToken", "-1")
 
+    init {
+        // AuthInterceptor의 unauthorizedEvent 관찰 => 발생 시, 데이터 삭제
+        AuthInterceptor.unauthorizedEvent.observeForever(Observer { unauthorized ->
+            if (unauthorized) {
+                deleteData()
+            }
+        })
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private val context: Context = application.applicationContext
+    private val apiService = RetrofitClient.create(context)
+
     fun checkIfTableExists(): Boolean {
         val token = sharedPreferences.getString("tableCode", null)
         return token != null
@@ -42,9 +56,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun loginTable(context: Context, tableLogin: TableLogin, onResult: (ApiResponse<Any>) -> Unit) {
         viewModelScope.launch {
             Log.d("loginTable", "$tableLogin 를 통해 로그인합니다.")
-            Log.d("loginTable", "$tableLogin 를 통해 로그인합니다.")
             try {
-                val response = RetrofitClient.apiService.loginTable(tableLogin)
+                val response = apiService.loginTable(tableLogin)
 
                 if (response.isSuccessful) {
                     val responseBody = response.body()
@@ -94,7 +107,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         Log.d("loginAdmin", "$tableAdminLogin 를 통해 로그인합니다.")
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.apiService.loginAdmin(tableAdminLogin, "Bearer $accessToken ")
+                val response = apiService.loginAdmin(tableAdminLogin, "Bearer $accessToken ")
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     Log.d("loginAdmin", "로그인 성공: $responseBody")
@@ -127,7 +140,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun disConnectTable(tableCode: TableCode, onResult: (ApiResponse<Any>) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.apiService.disconnectTable(tableCode,"Bearer $accessToken ")
+                val response = apiService.disconnectTable(tableCode,"Bearer $accessToken ")
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     Log.d("loginAdmin", "로그인 성공: $responseBody")

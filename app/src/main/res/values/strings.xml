@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">NaganeTable</string>
 
-    <string name="splash_title_first">언제나 당신의 곁으로 가고는 싶은 가게</string>
+    <string name="splash_title_first">언제나 당신의 곁에 있고 싶은 가게</string>
     <string name="splash_title_second">나가네</string>
 
     <string name="welcome_title">환영합니다!</string>
@@ -61,6 +61,7 @@
     <string name="payment_info_second">결제 중입니다.\n잠시만 기다려주세요.</string>
     <string name="payment_info_third">서버 측에 데이터 전송 중입니다.\n잠시만 기다려주세요.</string>
     <string name="payment_info_forth">결제가 완료되었습니다.\n감사합니다.</string>
+    <string name="payment_over_count">재고가 부족합니다. 홈 화면으로 돌아갑니다.</string>
     <string name="payment_fail">결제에 실패했습니다. 홈 화면으로 돌아갑니다.</string>
 
     <string name="order_list">주문목록</string>
@@ -74,5 +75,7 @@
 
     <string name="admin_fake_title">홀짝게임</string>
     <string name="result_error">오류가 발생했습니다.</string>
+    
+    <string name="unauthorization_error">인증 오류가 발생했습니다. 앱을 종료합니다.</string>
 
 </resources>

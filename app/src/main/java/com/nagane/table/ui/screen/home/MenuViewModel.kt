@@ -1,5 +1,6 @@
 package com.nagane.table.ui.screen.home
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -28,6 +29,9 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
         false))
     val menuDetail : State<MenuDetail> = _menuDetail
 
+    @SuppressLint("StaticFieldLeak")
+    private val context: Context = application.applicationContext
+    private val apiService = RetrofitClient.create(context)
 
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("table_prefs", Context.MODE_PRIVATE)
@@ -46,7 +50,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
             Log.d("API_INFO", "가맹점 코드 가져오기 : ${storeCode}")
             try {
                 if (accessToken  != null) {
-                    val response = RetrofitClient.apiService.getCategories("Bearer $accessToken ")
+                    val response = apiService.getCategories("Bearer $accessToken ")
                     if (response.statusCode == 200) {
                         val categoryList = response.data?.categoryList ?: emptyList()
                         val allCategories = listOf(Category(0, "전체보기")) + categoryList
@@ -71,7 +75,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 Log.d("API_INFO", "메뉴 리스트 가져오기")
-                val response = storeCode?.let { RetrofitClient.apiService.getMenuList(it, categoryNo, "Bearer $accessToken ") }
+                val response = storeCode?.let { apiService.getMenuList(it, categoryNo, "Bearer $accessToken ") }
                 if (response != null) {
                     Log.d("API_INFO", "메뉴 리스트 가져오기 성공 : ${response.message}")
                     if (response.statusCode == 200) {
@@ -94,7 +98,7 @@ class MenuViewModel(application: Application) : AndroidViewModel(application) {
                 Log.d("API_INFO", "선택한 메뉴 상세정보 가져오기")
                 val response = storeCode?.let {
                     Log.d("API_INFO", "선택한 메뉴 상세정보 가져오기 $it $menuNo")
-                    RetrofitClient.apiService.getMenuDetail(it, menuNo, "Bearer $accessToken ")
+                    apiService.getMenuDetail(it, menuNo, "Bearer $accessToken ")
                 }
                 if (response != null) {
                     Log.d("API_INFO", "메뉴 상세 정보 가져오기 성공 : ${response.message}")

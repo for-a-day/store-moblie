@@ -1,5 +1,6 @@
 package com.nagane.table.ui.screen.order
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -28,6 +29,10 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
     val tableCode = sharedPreferences.getString("tableCode", "-1")
     private val accessToken = sharedPreferences.getString("accessToken", "-1")
 
+    @SuppressLint("StaticFieldLeak")
+    private val context: Context = application.applicationContext
+    private val apiService = RetrofitClient.create(context)
+
     init {
         fetchOrderList()
     }
@@ -36,7 +41,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("fetchOrderList", "주문 리스트 데이터를 불러옵니다.")
             try {
-                val response = tableCode?.let { RetrofitClient.apiService.getOrderList(it, "Bearer $accessToken ") }
+                val response = tableCode?.let { apiService.getOrderList(it, "Bearer $accessToken ") }
 
                 if (response != null && response.statusCode == 200) {
                     _orderList.value = response.data?.orderList ?: emptyList()
