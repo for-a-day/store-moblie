@@ -15,13 +15,14 @@
 4. [🏘️ 프로젝트 별 repository](#%EF%B8%8F-프로젝트-별-repository)
 5. [🌸 아키텍쳐](#-아키텍쳐)
 6. [⚙️ ERD](#%EF%B8%8F-erd)
-7. [🪡 application.properties](#-applicationproperties)
+7. [🪡 Build](#-build)
 8. [🏗️ API 설계](#%EF%B8%8F-api-설계)
 9. [📔 API 명세서](#-api-명세서)
 10. [✔ 주요 기능](#-주요-기능)
-11. [🖼️ 스크린샷](#%EF%B8%8F-스크린샷)
-12. [🌋 트러블 슈팅](#-트러블-슈팅)
-13. [😄 Commit Convention](#-Commit-Convention)
+11. [🧮 화면 설계](#-화면-설계)
+12. [🖼️ 스크린샷](#%EF%B8%8F-스크린샷)
+13. [🌋 트러블 슈팅](#-트러블-슈팅)
+14. [😄 Commit Convention](#-Commit-Convention)
 
 <br>
 
@@ -110,8 +111,9 @@ https://github.com/for-a-day/store-front
 
 <br>
 
-## 🪡 application.properties
+## 🪡 Build
 
+### application.properties
 ```
 spring.application.name=franchise-back
 server.port=9001
@@ -254,6 +256,13 @@ jwt.secret=if_you_want_then_fill_it
 </div>
 </details>
 <br>
+
+## 🧮 화면 설계
+
+[테이블 오더 앱 화면 설계](https://www.figma.com/design/iooKbjStlSOQx2wiIS2ZPE/%EB%82%98%EA%B0%80%EB%84%A4-TO-%ED%99%94%EB%A9%B4-%EC%84%A4%EA%B3%84?node-id=0-1&node-type=canvas)
+
+[포스기 화면 설계](https://docs.google.com/presentation/d/1hvGYlNxWSIBJ5ox-ibsM8a0oAv9CNDqkSrhDtgVqUGs/edit#slide=id.g27411544873_0_606)
+
 
 ## 🖼️ 스크린샷
 
